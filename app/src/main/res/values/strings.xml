@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">YandexTranshate</string>
+    <string name="app_name">Я.Переводчик</string>
+
+    <!-- Navigation bottom bar titles -->
+    <string name="navigation_translate_title">Translate</string>
+    <string name="navigation_bookmarks_title">Bookmarks</string>
+    <string name="navigation_settings_title">Settings</string>
+
+    <!-- Placeholders -->
+    <string name="translate_fragment_placeholder">Translate fragment</string>
+    <string name="bookmarks_fragment_placeholder">Bookmarks fragment</string>
+    <string name="settings_fragment_placeholder">Settings fragment</string>
+
 </resources>

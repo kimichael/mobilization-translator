@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranshate;
+package com.example.kimichael.yandextranslate;
 
 import org.junit.Test;
 
