@@ -7,8 +7,6 @@
     <string name="navigation_settings_title">Settings</string>
 
     <!-- Placeholders -->
-    <string name="translate_fragment_placeholder">Translate fragment</string>
-    <string name="bookmarks_fragment_placeholder">Bookmarks fragment</string>
-    <string name="settings_fragment_placeholder">Settings fragment</string>
+    <string name="translate_input_text_placeholder">Type text for translation</string>
 
 </resources>
