@@ -21,3 +21,10 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+ext {
+    supportVersion = '25.3.1'
+    espressoVersion = '2.2.2'
+    butterknifeVersion = '8.5.1'
+}

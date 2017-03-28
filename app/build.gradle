@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.example.kimichael.yandextranshate"
+        applicationId "com.example.kimichael.yandextranslate"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -16,16 +15,53 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+        }
+    }
+    buildTypes.each {
+        // Api key for "Яндекс.Переводчик"
+        it.buildConfigField 'String', 'YANDEX_TRANSLATE_API_KEY', '\"trnsl.1.1.20170317T004858Z.f9d0ae4ee84e8e45.94edd3777af008a1671b216fad5772d2b03c9e02\"'
+    }
+
+    productFlavors {
+        prod {
+        }
+        mock {
+            applicationIdSuffix = ".mock"
+        }
+    }
+
+    // Remove mockRelease as it's not needed.
+    android.variantFilter { variant ->
+        if(variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('mock')) {
+            variant.setIgnore(true);
+        }
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    testCompile 'junit:junit:4.12'
+    dependencies {
+        // Android support libraries
+        compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+        compile "com.android.support:design:$rootProject.ext.supportVersion"
+        compile "com.android.support:support-v4:$rootProject.ext.supportVersion"
+
+        // Unit testing libraries
+        testCompile 'junit:junit:4.12'
+
+        // Espresso UI Testing dependencies.
+        androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+        androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+        androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+
+        // Butterknife
+        compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+        annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
+    }
+
+configurations.all {
+    resolutionStrategy.force "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+    resolutionStrategy.force "com.android.support:design:$rootProject.ext.supportVersion"
+    resolutionStrategy.force "com.android.support:support-v4:$rootProject.ext.supportVersion"
 }
