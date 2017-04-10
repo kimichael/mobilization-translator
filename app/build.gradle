@@ -22,43 +22,39 @@ android {
     buildTypes.each {
         // Api key for "Яндекс.Переводчик"
         it.buildConfigField 'String', 'YANDEX_TRANSLATE_API_KEY', '\"trnsl.1.1.20170317T004858Z.f9d0ae4ee84e8e45.94edd3777af008a1671b216fad5772d2b03c9e02\"'
-    }
-
-    productFlavors {
-        prod {
-        }
-        mock {
-            applicationIdSuffix = ".mock"
-        }
-    }
-
-    // Remove mockRelease as it's not needed.
-    android.variantFilter { variant ->
-        if(variant.buildType.name.equals('release')
-                && variant.getFlavors().get(0).name.equals('mock')) {
-            variant.setIgnore(true);
-        }
+        it.buildConfigField 'String', 'YANDEX_DICTIONARY_API_KEY', '\"dict.1.1.20170324T140358Z.9eee29b647b96fe9.d246164677bcabfc4c26177bb8cadbec1d0dcdb5\"'
     }
 }
 
-    dependencies {
-        // Android support libraries
-        compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
-        compile "com.android.support:design:$rootProject.ext.supportVersion"
-        compile "com.android.support:support-v4:$rootProject.ext.supportVersion"
 
-        // Unit testing libraries
-        testCompile 'junit:junit:4.12'
-
-        // Espresso UI Testing dependencies.
-        androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
-        androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
-        androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
-
-        // Butterknife
-        compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
-        annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
-    }
+dependencies {
+    // Android support libraries
+    compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+    compile "com.android.support:design:$rootProject.ext.supportVersion"
+    compile "com.android.support:support-v4:$rootProject.ext.supportVersion"
+    // Gson library for json deserializing
+    compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+    // Unit testing library
+    testCompile 'junit:junit:4.12'
+    // Mockito testing library
+    testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    // Espresso UI Testing library
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+    // Butterknife library
+    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
+    // Dagger library
+    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    provided 'javax.annotation:jsr250-api:1.0'
+    // Apache IO utils library
+    testCompile "org.apache.commons:commons-io:$rootProject.ext.apacheIOUtilsVersion"
+    // Retrofit & OkHttp libraries for network calls
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+}
 
 configurations.all {
     resolutionStrategy.force "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
