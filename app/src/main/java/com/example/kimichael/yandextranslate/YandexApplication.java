@@ -1,5 +1,10 @@
 package com.example.kimichael.yandextranslate;
 
 
-public class YandexApplication extends YandexApplication {
+import android.app.Application;
+
+public class YandexApplication extends Application {
+
+
+
 }

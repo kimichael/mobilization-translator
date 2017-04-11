@@ -5,17 +5,22 @@ import com.example.kimichael.yandextranslate.data.TranslationRepository;
 public class TranslatePresenter implements TranslateContract.UserActionsListener {
 
     private TranslateContract.View translateView;
-    private TranslationRepository translationsRepository;
-
+    private TranslationRepository translationRepository;
 
     public TranslatePresenter(TranslateContract.View view, TranslationRepository repository) {
+        this.translationRepository = repository;
+        onAttachView(view);
+    }
+    public void onAttachView(TranslateContract.View view) {
         this.translateView = view;
-        this.translationsRepository = repository;
-        view.setProgressSpinner(true);
     }
 
-    public void loadTranslations(boolean update) {
-        translateView.setProgressSpinner(true);
+    public void onDetachView() {
+        this.translateView = null;
+    }
+
+    @Override
+    public void loadTranslation() {
 
     }
 }

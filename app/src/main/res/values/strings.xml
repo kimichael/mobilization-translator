@@ -7,6 +7,8 @@
     <string name="navigation_settings_title">Settings</string>
 
     <!-- Placeholders -->
-    <string name="translate_input_text_placeholder">Type text for translation</string>
+    <string name="translate_input_text_placeholder">Type text for dictionary</string>
+
+    <string name="content_authority">com.example.kimichael.yandextranslate</string>
 
 </resources>

@@ -6,7 +6,8 @@
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <RelativeLayout
         android:id="@+id/text_input_box"
@@ -29,7 +30,7 @@
                 android:minHeight="90dp"
                 android:id="@+id/translated_word_edit_text"
                 android:background="@android:color/transparent"
-                android:gravity="top|left"
+                android:gravity="top|start"
                 android:inputType="textMultiLine"
                 android:scrollbars="vertical"
                 android:maxLines="4"
@@ -73,26 +74,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/translation_list"
-            android:background="@color/dark"/>
+            android:orientation="horizontal">
+    
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            style="@style/Base.Widget.AppCompat.ProgressBar"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/translation_list"
+                    android:background="@color/dark"/>
 
-    </RelativeLayout>
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    style="@style/Base.Widget.AppCompat.ProgressBar"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

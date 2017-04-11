@@ -3,13 +3,10 @@ package com.example.kimichael.yandextranslate.translate;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-/**
- * Created by mikim on 22.03.17.
- */
-
 public class TranslationAdapter extends RecyclerView.Adapter {
 
-    public static class ViewHolder {
+    static class ViewHolder {
+
     }
 
     @Override

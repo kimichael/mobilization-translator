@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,20 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.example.kimichael.yandextranslate.Injector;
+import com.example.kimichael.yandextranslate.ComponentProvider;
 import com.example.kimichael.yandextranslate.R;
+import com.example.kimichael.yandextranslate.components.ActivityComponent;
+import com.example.kimichael.yandextranslate.data.TranslationRepository;
+import com.example.kimichael.yandextranslate.data.objects.DictionaryTranslation;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnTextChanged;
+import butterknife.Unbinder;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -31,57 +39,34 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @BindView(R.id.translated_word_edit_text) EditText mInputEditText;
     @BindView(R.id.clear_text_button) ImageButton mClearButton;
     @BindView(R.id.spinner) ProgressBar mLoadingSpinner;
+    // A special field of ButterKnife to nullify all binded views
+    private Unbinder unbinder;
 
+    private ActivityComponent mActivityComponent;
     TranslateContract.UserActionsListener mPresenter;
+    @Inject
+    TranslationRepository mTranslationSource;
 
     public TranslateFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new TranslatePresenter(this, Injector.provideTranslationsRepository());
+        mActivityComponent.inject(this);
+        mPresenter = new TranslatePresenter(this, mTranslationSource);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_translate, container, false);
-        ButterKnife.bind(this, rootview);
-
-        // Change border line when edit text changes focus
-        mInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                int drawable = hasFocus ? R.drawable.text_edit_border_focused
-                        : R.drawable.text_edit_border_unfocused;
-                mTextBox.setBackground(ContextCompat.getDrawable(getContext(), drawable));
-            }
-        });
-
-        mInputEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() < 1)
-                    mClearButton.setVisibility(GONE);
-                else
-                    mClearButton.setVisibility(VISIBLE);
-            }
-        });
-
-        // Clear edit text on clear button click
-        mClearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearInput(true);
-            }
-        });
-
+        unbinder = ButterKnife.bind(this, rootview);
         clearInput(false);
         return rootview;
     }
@@ -89,11 +74,27 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mActivityComponent = ((ComponentProvider) context).provideComponent();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    // Show clear button when user starts typing
+    @OnTextChanged(value = R.id.translated_word_edit_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void afterTextChanged(Editable s) {
+        if (s.length() < 1)
+            mClearButton.setVisibility(GONE);
+        else
+            mClearButton.setVisibility(VISIBLE);
+
+    }
+
+    @OnClick(R.id.clear_text_button)
+    public void onClearButtonClick() {
+        clearInput(true);
     }
 
     @Override
@@ -107,8 +108,28 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    // Change border line when edit text changes focus
+    @OnFocusChange(R.id.translated_word_edit_text)
+    public void changeFocus(View v, boolean hasFocus) {
+        int drawable = hasFocus ? R.drawable.text_edit_border_focused
+                : R.drawable.text_edit_border_unfocused;
+        mTextBox.setBackground(ContextCompat.getDrawable(getContext(), drawable));
+        if (!hasFocus)
+            mPresenter.loadTranslation();
+    }
+
     @Override
     public void setProgressSpinner(boolean active) {
         mLoadingSpinner.setVisibility(active ? VISIBLE : GONE);
+    }
+
+    @Override
+    public void showTranslation(DictionaryTranslation dictionaryTranslation) {
+
+    }
+
+    @Override
+    public String getRequestedWord() {
+        return mInputEditText.getText().toString();
     }
 }
