@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.data.local;
+package com.example.kimichael.yandextranslate.data.sources;
 
 import android.support.annotation.NonNull;
 
@@ -9,7 +9,9 @@ import com.example.kimichael.yandextranslate.data.objects.DictionaryTranslation;
 public class LocalTranslationSource implements TranslationSource {
     //TODO Finish this class
     @Override
-    public void getTranslation(String requestedWord, @NonNull LoadDictionaryTranslationCallback callback) {
+    public void getTranslation(String requestedWord,
+                               @TranslationApi int translationApi,
+                               @NonNull LoadDictionaryTranslationCallback callback) {
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate;
+package com.example.kimichael.yandextranslate.activity;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.example.kimichael.yandextranslate.ComponentProvider;
+import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.components.DaggerActivityComponent;
 import com.example.kimichael.yandextranslate.history.HistoryFragment;
@@ -51,7 +54,9 @@ public class MainActivity extends AppCompatActivity
         resetFragmentState();
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        super.onCreate(savedInstanceState);
+        // Set toolbar as support action bar for fragment to acces it
+        Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     //Navigate to translate fragment

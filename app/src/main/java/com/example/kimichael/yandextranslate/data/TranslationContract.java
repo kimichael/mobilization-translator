@@ -57,83 +57,11 @@ public class TranslationContract {
         public static final String COLUMN_TEXT = "text";
         public static final String COLUMN_PART_OF_SPEECH = "pos";
         public static final String COLUMN_TRANSCRIPTION = "transcription";
+        // Definition has a translations, which has meanings, synonyms and examples
+        // We will show it as a json text
+        public static final String COLUMN_JSON_CHILDREN = "json_children";
 
-        // Definition refers to its word
         public static final String COLUMN_WORD_KEY = "word_id";
-    }
-
-    // Each definition can have several translations
-    public static final class TranslationEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRANSLATION).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRANSLATION;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRANSLATION;
-
-        public static final String TABLE_NAME = "translation";
-
-        // Text of translation. It is in destination language
-        public static final String COLUMN_TEXT = "text";
-        public static final String COLUMN_PART_OF_SPEECH = "pos";
-        public static final String COLUMN_GENUS = "gen";
-
-        // Translation refers to its definition
-        public static final String COLUMN_DEFINITION_KEY = "definition_id";
-    }
-
-    // Translation can have several synonyms
-    public static final class SynonymEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SYNONYM).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRANSLATION;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRANSLATION;
-
-        public static final String TABLE_NAME = "synonym";
-
-        // Synonym properties
-        public static final String COLUMN_TEXT = "text";
-        public static final String COLUMN_PART_OF_SPEECH = "pos";
-        public static final String COLUMN_GENUS = "gen";
-
-        // Synonym refers to translation
-        public static final String COLUMN_TRANSLATION_KEY = "translation_id";
-    }
-
-    // Translation can also have several meanings
-    public static final class MeaningEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEANING).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEANING;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEANING;
-
-        public static final String TABLE_NAME = "meaning";
-
-        // Meaning of translation
-        public static final String COLUMN_TEXT = "text";
-
-        public static final String COLUMN_TRANSLATION_KEY = "translation_id";
-    }
-
-    // Translation can also have several examples
-    public static final class ExampleEntry implements BaseColumns {
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_EXAMPLE).build();
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_EXAMPLE;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_EXAMPLE;
-
-        public static final String TABLE_NAME = "example";
-
-        public static final String COLUMN_SRC_TEXT = "src_text";
-        public static final String COLUMN_DEST_TEXT = "dest_text";
-
-        public static final String COLUMN_TRANSLATION_KEY = "translation_id";
     }
 
     public static final class LanguageEntry implements BaseColumns {

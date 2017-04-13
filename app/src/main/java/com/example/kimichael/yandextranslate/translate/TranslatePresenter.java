@@ -11,6 +11,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         this.translationRepository = repository;
         onAttachView(view);
     }
+
     public void onAttachView(TranslateContract.View view) {
         this.translateView = view;
     }
