@@ -9,7 +9,7 @@ import com.example.kimichael.yandextranslate.data.TranslationContract.*;
 public class TranslationDbHelper extends SQLiteOpenHelper {
 
     // If you change the schema, you should increment the version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_NAME = "translation.db";
 
@@ -35,7 +35,8 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 DefinitionEntry.COLUMN_PART_OF_SPEECH + " TEXT NOT NULL," +
                 DefinitionEntry.COLUMN_TRANSCRIPTION + " TEXT NOT NULL," +
                 DefinitionEntry.COLUMN_JSON_CHILDREN + " TEXT," +
-                DefinitionEntry.COLUMN_WORD_KEY + "INTEGER NOT NULL," +
+                DefinitionEntry.COLUMN_WORD_KEY + " INTEGER NOT NULL," +
+                DefinitionEntry.COLUMN_ORDER + " INTEGER NOT NULL, " +
                 "FOREIGN KEY (" + DefinitionEntry.COLUMN_WORD_KEY + ") REFERENCES "
                     + WordEntry.TABLE_NAME +
                     "(" + WordEntry._ID + ")" + ")";

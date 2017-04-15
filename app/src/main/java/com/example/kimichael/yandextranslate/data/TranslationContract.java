@@ -1,6 +1,7 @@
 package com.example.kimichael.yandextranslate.data;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -21,6 +22,9 @@ public class TranslationContract {
 
     // This table stores history of translated words
     public static final class WordEntry implements BaseColumns {
+
+
+
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_WORD).build();
         public static final String CONTENT_TYPE =
@@ -40,6 +44,30 @@ public class TranslationContract {
         // Language, to which we translate the word
         public static final String COLUMN_DEST_LANG = "dest_lang";
 
+        public static Uri buildWordUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildWordWithSrcWordAndLangDirection(String word, String srcLang, String destLang) {
+            return CONTENT_URI.buildUpon()
+                    .appendQueryParameter(COLUMN_SRC_WORD, word)
+                    .appendPath(srcLang)
+                    .appendPath(destLang)
+                    .build();
+        }
+
+        public static String getWordSettingFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static String getSrcLangSettingFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static String getDestLangSettingFromUri(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
+
     }
 
     // DictionaryTranslation can have several definitions.
@@ -57,11 +85,27 @@ public class TranslationContract {
         public static final String COLUMN_TEXT = "text";
         public static final String COLUMN_PART_OF_SPEECH = "pos";
         public static final String COLUMN_TRANSCRIPTION = "transcription";
+        // Each definition must stay in order we get it from service
+        public static final String COLUMN_ORDER = "order";
         // Definition has a translations, which has meanings, synonyms and examples
         // We will show it as a json text
         public static final String COLUMN_JSON_CHILDREN = "json_children";
 
         public static final String COLUMN_WORD_KEY = "word_id";
+
+        public static Uri buildDefinitionUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildDefinitionWithWordId(String wordId) {
+            return CONTENT_URI.buildUpon()
+                    .appendQueryParameter(COLUMN_WORD_KEY, wordId)
+                    .build();
+        }
+
+        public static Integer getWordIdFromUri(Uri uri) {
+            return Integer.parseInt(uri.getPathSegments().get(1));
+        }
     }
 
     public static final class LanguageEntry implements BaseColumns {
@@ -76,6 +120,10 @@ public class TranslationContract {
 
         public static final String COLUMN_LANGUAGE_KEY = "lang_code";
         public static final String COLUMN_LANGUAGE_NAME = "name";
+
+        public static Uri buildLanguageUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
     }
 
     // Table which determines, whether you can use dictionary API for these two languages
@@ -92,5 +140,24 @@ public class TranslationContract {
         public static final String COLUMN_SRC_LANGUAGE = "src_lang";
         public static final String COLUMN_DEST_LANGUAGE = "dest_lang";
         public static final String COLUMN_API_DICT_AVAILABLE = "dict_api_available";
+
+        public static Uri buildLanguageDirectionUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildLanguageDirectionWithSrcAndDestLanguages(String srcLanguage, String destLanguage) {
+            return CONTENT_URI.buildUpon()
+                    .appendQueryParameter(COLUMN_SRC_LANGUAGE, srcLanguage)
+                    .appendQueryParameter(COLUMN_DEST_LANGUAGE, destLanguage)
+                    .build();
+        }
+
+        public static String getSrcLanguageFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static String getDestLanguageFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
     }
 }

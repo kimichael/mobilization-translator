@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.translate;
+package com.example.kimichael.yandextranslate.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
