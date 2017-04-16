@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.example.kimichael.yandextranslate.data.objects.DictionaryTranslation;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
+import com.example.kimichael.yandextranslate.network.NetworkTranslationSource;
 
 public interface TranslationRepository {
 
@@ -16,4 +17,7 @@ public interface TranslationRepository {
 
     void saveTranslation(@NonNull DictionaryTranslation dictionaryTranslation);
     void saveTranslation(@NonNull Translation translation);
+
+    void retrieveLanguages(TranslationQueryHandler queryHandler);
+    void retrieveLanguageDirections(TranslationQueryHandler queryHandler);
 }

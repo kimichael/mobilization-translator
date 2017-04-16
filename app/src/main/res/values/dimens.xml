@@ -5,8 +5,9 @@
     <!--Margins for fragments-->
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
-    
+
     <dimen name="navigation_bar_elevation">8dp</dimen>
 
     <dimen name="textbox_inner_margin">8dp</dimen>
+    <dimen name="small_button_padding">8dp</dimen>
 </resources>

@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.example.kimichael.yandextranslate.data.objects.Language;
-
 public class TranslationProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -35,8 +33,8 @@ public class TranslationProvider extends ContentProvider {
 
     private static final String sTranslationDirectionBySrcLangAndDestLangSelection =
             TranslationContract.LanguageDirectionEntry.TABLE_NAME + "." +
-                    TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE + " = ? AND " +
-                    TranslationContract.LanguageDirectionEntry.COLUMN_DEST_LANGUAGE + " = ?";
+                    TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE + " = ? AND " +
+                    TranslationContract.LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + " = ?";
 
     private Cursor getTranslationByWordAndLangSelection(Uri uri, String[] projection, String sortOrder) {
         String wordSetting = TranslationContract.WordEntry.getWordSettingFromUri(uri);
@@ -125,7 +123,7 @@ public class TranslationProvider extends ContentProvider {
 
         uriMatcher.addURI(authority, TranslationContract.PATH_WORD + "/*", WORD);
         uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE, LANGUAGE);
-        uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE_DIRECTION + "/*", LANGUAGE_DIRECTION);
+        uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE_DIRECTION, LANGUAGE_DIRECTION);
         uriMatcher.addURI(authority, TranslationContract.PATH_DEFINITION + "/*", DEFINITION);
         return uriMatcher;
     }
@@ -192,7 +190,7 @@ public class TranslationProvider extends ContentProvider {
                 break;
             }
             case LANGUAGE: {
-                long _id = db.insert(TranslationContract.LanguageEntry.TABLE_NAME, null, values);
+                long _id = db.insertWithOnConflict(TranslationContract.LanguageEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (_id > 0)
                     returnUri = TranslationContract.LanguageEntry.buildLanguageUri(_id);
                 else
@@ -200,7 +198,7 @@ public class TranslationProvider extends ContentProvider {
                 break;
             }
             case LANGUAGE_DIRECTION: {
-                long _id = db.insert(TranslationContract.LanguageDirectionEntry.TABLE_NAME, null, values);
+                long _id = db.insertWithOnConflict(TranslationContract.LanguageDirectionEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (_id > 0)
                     returnUri = TranslationContract.LanguageDirectionEntry.buildLanguageDirectionUri(_id);
                 else

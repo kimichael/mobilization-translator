@@ -1,7 +1,7 @@
 package com.example.kimichael.yandextranslate.components;
 
 import com.example.kimichael.yandextranslate.modules.ContextModule;
-import com.example.kimichael.yandextranslate.translate.TranslateFragment;
+import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
 
 import javax.inject.Singleton;
 

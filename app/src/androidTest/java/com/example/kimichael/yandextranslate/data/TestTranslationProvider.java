@@ -41,26 +41,6 @@ public class TestTranslationProvider extends ProviderTestCase2<TranslationProvid
                 null,
                 null
         );
-        mContext.getContentResolver().delete(
-                TranslationContract.TranslationEntry.CONTENT_URI,
-                null,
-                null
-        );
-        mContext.getContentResolver().delete(
-                TranslationContract.SynonymEntry.CONTENT_URI,
-                null,
-                null
-        );
-        mContext.getContentResolver().delete(
-                TranslationContract.ExampleEntry.CONTENT_URI,
-                null,
-                null
-        );
-        mContext.getContentResolver().delete(
-                TranslationContract.MeaningEntry.CONTENT_URI,
-                null,
-                null
-        );
 
         Cursor cursor = mContext.getContentResolver().query(
                 TranslationContract.WordEntry.CONTENT_URI,
@@ -72,38 +52,6 @@ public class TestTranslationProvider extends ProviderTestCase2<TranslationProvid
         assertEquals("Word records are not deleted", 0, cursor.getCount());
         cursor = mContext.getContentResolver().query(
                 TranslationContract.DefinitionEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-        assertEquals("Definition records are not deleted", 0, cursor.getCount());
-        cursor = mContext.getContentResolver().query(
-                TranslationContract.TranslationEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-        assertEquals("Translation records are not deleted", 0, cursor.getCount());
-        cursor = mContext.getContentResolver().query(
-                TranslationContract.MeaningEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-        assertEquals("Meaning records are not deleted", 0, cursor.getCount());
-        cursor = mContext.getContentResolver().query(
-                TranslationContract.SynonymEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-        assertEquals("Synonym records are not deleted", 0, cursor.getCount());
-        cursor = mContext.getContentResolver().query(
-                TranslationContract.ExampleEntry.CONTENT_URI,
                 null,
                 null,
                 null,

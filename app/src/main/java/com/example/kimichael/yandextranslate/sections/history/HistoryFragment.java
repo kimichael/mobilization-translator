@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.history;
+package com.example.kimichael.yandextranslate.sections.history;
 
 
 import android.os.Bundle;

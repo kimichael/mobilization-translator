@@ -9,7 +9,7 @@ import com.example.kimichael.yandextranslate.data.TranslationContract.*;
 public class TranslationDbHelper extends SQLiteOpenHelper {
 
     // If you change the schema, you should increment the version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String DATABASE_NAME = "translation.db";
 
@@ -45,14 +45,17 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_LANGUAGE_TABLE = "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" +
                 LanguageEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 LanguageEntry.COLUMN_LANGUAGE_KEY + " TEXT NOT NULL, " +
-                LanguageEntry.COLUMN_LANGUAGE_NAME + " TEXT NOT NULL" + " )";
+                LanguageEntry.COLUMN_LANGUAGE_NAME + " TEXT NOT NULL, " +
+                "UNIQUE(" + LanguageEntry.COLUMN_LANGUAGE_KEY + ") ON CONFLICT IGNORE" + " )";
 
         // Create a table for language directions
         final String SQL_CREATE_LANGUAGE_DIRECTION_TABLE = "CREATE TABLE " + LanguageDirectionEntry.TABLE_NAME + " (" +
                 LanguageDirectionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                LanguageDirectionEntry.COLUMN_SRC_LANGUAGE + " TEXT NOT NULL," +
-                LanguageDirectionEntry.COLUMN_DEST_LANGUAGE + " TEXT NOT NULL," +
-                LanguageDirectionEntry.COLUMN_API_DICT_AVAILABLE + " INTEGER NOT NULL" + " )";
+                LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE + " TEXT NOT NULL," +
+                LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + " TEXT NOT NULL," +
+                "UNIQUE (" + LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE + ", "
+                           + LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + ") ON CONFLICT REPLACE" +
+                LanguageDirectionEntry.COLUMN_API_DICT_AVAILABLE + " INTEGER" + " )";
 
 
         db.execSQL(SQL_CREATE_WORD_TABLE);

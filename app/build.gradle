@@ -52,8 +52,9 @@ dependencies {
     // Apache IO utils library
     testCompile "org.apache.commons:commons-io:$rootProject.ext.apacheIOUtilsVersion"
     // Retrofit & OkHttp libraries for network calls
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
 
 configurations.all {

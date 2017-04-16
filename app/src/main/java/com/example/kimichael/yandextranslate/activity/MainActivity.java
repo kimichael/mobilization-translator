@@ -19,15 +19,13 @@ import com.example.kimichael.yandextranslate.ComponentProvider;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.components.DaggerActivityComponent;
-import com.example.kimichael.yandextranslate.history.HistoryFragment;
+import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
 import com.example.kimichael.yandextranslate.modules.ContextModule;
-import com.example.kimichael.yandextranslate.settings.SettingsFragment;
-import com.example.kimichael.yandextranslate.translate.TranslateFragment;
+import com.example.kimichael.yandextranslate.sections.settings.SettingsFragment;
+import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import dagger.Component;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ComponentProvider {

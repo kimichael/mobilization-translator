@@ -9,10 +9,6 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by mikim on 03.04.17.
- */
-
 public class TranslationDeserializer implements JsonDeserializer<Translation> {
 
     private static final String TRANSLATED_WORD = "text";

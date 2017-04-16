@@ -9,6 +9,18 @@
     <!-- Placeholders -->
     <string name="translate_input_text_placeholder">Type text for dictionary</string>
 
-    <string name="content_authority">com.example.kimichael.yandextranslate</string>
+    <string name="content_authority" translatable="false">com.example.kimichael.yandextranslate</string>
+
+    <!--Preferences for language direction choosing-->
+    <string name="pref_src_language">src_lang</string>
+    <string name="pref_dest_language">dest_lang</string>
+    <string name="pref_src_language_code">src_lang_code</string>
+    <string name="pref_dest_language_code">dest_lang_code</string>
+    <string name="default_src_language">English</string>
+    <string name="default_src_language_code">en</string>
+    <string name="default_dest_language">Russian</string>
+    <string name="default_dest_language_code">ru</string>
+
+    <string name="no_internet_message">We can\'t access Yandex servers. Check your internet connection.</string>
 
 </resources>

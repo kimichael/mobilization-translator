@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.settings;
+package com.example.kimichael.yandextranslate.sections.settings;
 
 
 import android.os.Bundle;

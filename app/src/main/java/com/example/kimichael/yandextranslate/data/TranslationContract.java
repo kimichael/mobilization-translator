@@ -86,7 +86,7 @@ public class TranslationContract {
         public static final String COLUMN_PART_OF_SPEECH = "pos";
         public static final String COLUMN_TRANSCRIPTION = "transcription";
         // Each definition must stay in order we get it from service
-        public static final String COLUMN_ORDER = "order";
+        public static final String COLUMN_ORDER = "def_order";
         // Definition has a translations, which has meanings, synonyms and examples
         // We will show it as a json text
         public static final String COLUMN_JSON_CHILDREN = "json_children";
@@ -137,8 +137,8 @@ public class TranslationContract {
 
         public static final String TABLE_NAME = "lang_direction";
 
-        public static final String COLUMN_SRC_LANGUAGE = "src_lang";
-        public static final String COLUMN_DEST_LANGUAGE = "dest_lang";
+        public static final String COLUMN_SRC_LANGUAGE_CODE = "src_lang";
+        public static final String COLUMN_DEST_LANGUAGE_CODE = "dest_lang";
         public static final String COLUMN_API_DICT_AVAILABLE = "dict_api_available";
 
         public static Uri buildLanguageDirectionUri(long id) {
@@ -147,8 +147,8 @@ public class TranslationContract {
 
         public static Uri buildLanguageDirectionWithSrcAndDestLanguages(String srcLanguage, String destLanguage) {
             return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(COLUMN_SRC_LANGUAGE, srcLanguage)
-                    .appendQueryParameter(COLUMN_DEST_LANGUAGE, destLanguage)
+                    .appendQueryParameter(COLUMN_SRC_LANGUAGE_CODE, srcLanguage)
+                    .appendQueryParameter(COLUMN_DEST_LANGUAGE_CODE, destLanguage)
                     .build();
         }
 
