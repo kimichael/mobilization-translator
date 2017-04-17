@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     private @ChosenFragmentStatus int mSelectedFragment;
     private ActivityComponent mActivityComponent;
+    BottomNavigationView mNavigationView;
 
 
     @Override
@@ -48,16 +49,15 @@ public class MainActivity extends AppCompatActivity
                 .build();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Default fragment is translate fragment
-        resetFragmentState();
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        mNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mNavigationView.setOnNavigationItemSelectedListener(this);
         // Set toolbar as support action bar for fragment to acces it
         Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        resetFragmentState();
     }
 
-    //Navigate to translate fragment
+    // Navigate to translate fragment
     private void resetFragmentState() {
         // Initialize activity with translate fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.container, translateFragment);
         transaction.commit();
         mSelectedFragment = FRAGMENT_STATUS_TRANSLATE;
+        mNavigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -104,6 +105,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public ActivityComponent provideComponent() {
         return mActivityComponent;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mSelectedFragment == FRAGMENT_STATUS_SETTINGS ||
+                mSelectedFragment == FRAGMENT_STATUS_BOOKMARKS) {
+            resetFragmentState();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     // Workaround to make edit text lose focus
