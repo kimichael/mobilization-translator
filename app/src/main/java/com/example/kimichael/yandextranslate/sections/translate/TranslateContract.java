@@ -7,9 +7,8 @@ import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 /**
- * Created by mikim on 22.03.17.
+ * Created by Kim Michael on 31.03.17.
  */
-
 public interface TranslateContract {
 
     interface View {
@@ -17,6 +16,8 @@ public interface TranslateContract {
         void setLanguages(String srcLanguageName, String destLanguageName);
 
         void clearInput(boolean showKeyboard);
+
+        void setInput(String input);
 
         void clearTranslation();
 
@@ -42,6 +43,9 @@ public interface TranslateContract {
         void onAttachView(TranslateContract.View view,
                           Language srcLanguage, Language destLanguage);
 
-        void saveLanguages(SharedPreferences prefs, Context context);
+        void saveState(SharedPreferences prefs, Context context);
+
+        void clearCache();
+
     }
 }

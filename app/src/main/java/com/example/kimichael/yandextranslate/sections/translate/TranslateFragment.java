@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +31,7 @@ import com.example.kimichael.yandextranslate.activity.SelectLanguageActivity;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
+import com.example.kimichael.yandextranslate.util.Utility;
 
 import javax.inject.Inject;
 
@@ -47,7 +48,9 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslateFragment extends Fragment implements TranslateContract.View {
 
     private final String LOG_TAG = TranslateFragment.class.getSimpleName();
@@ -58,11 +61,19 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @BindView(R.id.spinner) ProgressBar mLoadingSpinner;
     @BindView(R.id.main_translation) TextView mMainTranslation;
     @BindView(R.id.expanded_translation) TextView mExpandedTranslation;
+    @BindView(R.id.yandex_message) TextView mYandexMessage;
+    @BindView(R.id.no_internet_message_block) LinearLayout mNoInternetBlock;
+    @BindView(R.id.retry_button) Button mRetryButton;
     ToolbarViewHolder mToolbarViewHolder;
     // A special field of ButterKnife to nullify all binded views
     private Unbinder unbinder;
     private ActivityComponent mActivityComponent;
     private SharedPreferences mSharedPreferences;
+
+    @Override
+    public void setInput(String input) {
+        mInputEditText.setText(input);
+    }
 
     @Inject TranslateContract.UserActionsListener mPresenter;
 
@@ -107,6 +118,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                                 getString(R.string.default_dest_language)),
                         mSharedPreferences.getString(getString(R.string.pref_dest_language_code),
                                 getString(R.string.default_dest_language_code))));
+        mInputEditText.setText(mSharedPreferences.getString(getString(R.string.key_input_text), ""));
+        commitTranslateAction();
         return rootview;
     }
 
@@ -130,6 +143,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     public void clearTranslation() {
         mMainTranslation.setText("");
         mExpandedTranslation.setText("");
+        mYandexMessage.setText("");
     }
 
     // Show clear button when user starts typing
@@ -144,6 +158,12 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @OnTextChanged(R.id.translated_word_edit_text)
     public void onTextChanged(Editable s) {
         clearTranslation();
+    }
+
+    @OnClick(R.id.retry_button)
+    public void retryConnection() {
+        mNoInternetBlock.setVisibility(GONE);
+        commitTranslateAction();
     }
 
     // Clear input text on clicking clear button and let edit text get focus
@@ -197,7 +217,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void onPause() {
-        mPresenter.saveLanguages(mSharedPreferences, getContext());
+        mPresenter.saveState(mSharedPreferences, getContext());
         super.onPause();
     }
 
@@ -220,6 +240,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                     mPresenter.setDestLanguage(selectedLanguage);
                     break;
             }
+            mPresenter.clearCache();
+            commitTranslateAction();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -238,12 +260,17 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         }
         if (translation.isFull()) {
             mExpandedTranslation.setText(translation.toHtml(getContext()));
+            mYandexMessage.setText(getString(R.string.yandex_dictionary_message));
+        } else {
+            mYandexMessage.setText(getString(R.string.yandex_translate_message));
         }
     }
 
     @Override
     public void updateEmptyView() {
-
+        if (!Utility.isNetworkAvailable(getContext())){
+            mNoInternetBlock.setVisibility(VISIBLE);
+        }
     }
 
     @Override

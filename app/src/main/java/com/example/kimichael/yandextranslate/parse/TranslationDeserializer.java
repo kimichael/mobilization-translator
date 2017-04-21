@@ -18,6 +18,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationDeserializer implements JsonDeserializer<Translation> {
 
     private static final String DEFINITION_ARRAY = "def";

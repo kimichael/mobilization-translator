@@ -13,6 +13,9 @@ import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslatePresenter implements TranslateContract.UserActionsListener {
 
     private TranslateContract.View mTranslateView;
@@ -20,6 +23,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
 
     private Language mSrcLanguage, mDestLanguage;
     private LanguageDirection mLanguageDirection;
+    private Translation mCachedTranslation;
 
     public TranslatePresenter(TranslationRepository repository) {
         this.mTranslationRepository = checkNotNull(repository);
@@ -43,19 +47,32 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     @Override
+    public void clearCache() {
+        mCachedTranslation = null;
+    }
+
+    @Override
     public void loadTranslation() {
         mTranslateView.setProgressSpinner(true);
+        if (mCachedTranslation != null && mCachedTranslation.getSrcWord().equals(mTranslateView.getRequestedText())) {
+            Timber.d("Found cached translation");
+            mTranslateView.setProgressSpinner(false);
+            mTranslateView.showTranslation(mCachedTranslation);
+            return;
+        }
         Timber.d("Start loading");
         mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection,
                 new TranslationRepository.LoadTranslationCallback() {
                     @Override
                     public void onTranslationLoaded(Translation translation) {
                         mTranslateView.setProgressSpinner(false);
+                        mCachedTranslation = translation;
                         mTranslateView.showTranslation(translation);
                     }
 
                     @Override
                     public void onLoadError() {
+                        Timber.d("Error loading");
                         mTranslateView.setProgressSpinner(false);
                         mTranslateView.updateEmptyView();
                     }
@@ -98,7 +115,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     @Override
-    public void saveLanguages(SharedPreferences prefs, Context context) {
+    public void saveState(SharedPreferences prefs, Context context) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.pref_src_language_code),
                 mSrcLanguage.getLanguageCode());
@@ -108,6 +125,8 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                 mDestLanguage.getLanguageCode());
         editor.putString(context.getString(R.string.pref_dest_language),
                 mDestLanguage.getName());
+        editor.putString(context.getString(R.string.key_input_text),
+                mTranslateView.getRequestedText());
         editor.apply();
     }
 

@@ -6,6 +6,9 @@ import android.os.Parcelable;
 
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class Language implements Parcelable {
 
     private String name;

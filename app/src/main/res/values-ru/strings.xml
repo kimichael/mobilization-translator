@@ -15,4 +15,9 @@
 
     <string name="no_internet_message">Не удалось подключиться к серверам Яндекса. Проверьте свое подключение к Интернету</string>
     <string name="app_name">Translator</string>
+    <string name="yandex_dictionary_message">Реализовано с помощью сервиса «API «Яндекс.Словарь»»</string>
+    <string name="yandex_translate_message">Переведено сервисом «Яндекс.Переводчик»</string>
+    <string name="retry">Повторить</string>
+    <string name="history_tab_name">История</string>
+    <string name="bookmarks_tab_name">Закладки</string>
 </resources>

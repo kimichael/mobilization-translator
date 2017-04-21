@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();

@@ -11,6 +11,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public interface YandexDictionaryClient {
 
     String BASE_URL = "https://dictionary.yandex.net/api/v1/";

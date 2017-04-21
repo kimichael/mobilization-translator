@@ -5,6 +5,9 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationContract {
 
     public final static String CONTENT_AUTHORITY = "com.example.kimichael.yandextranslate";

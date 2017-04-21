@@ -7,6 +7,9 @@ import com.example.kimichael.yandextranslate.parse.Composer;
 
 import java.util.List;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class Definition {
 
     private String srcWord;

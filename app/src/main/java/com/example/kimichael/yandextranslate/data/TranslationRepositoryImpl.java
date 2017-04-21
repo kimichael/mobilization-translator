@@ -20,6 +20,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationRepositoryImpl implements TranslationRepository {
 
     //TODO Finish this class
@@ -28,8 +33,8 @@ public class TranslationRepositoryImpl implements TranslationRepository {
 
     public TranslationRepositoryImpl(LocalTranslationSource localLocalTranslationSource,
                                      NetworkTranslationSource networkTranslationSource) {
-        mLocalTranslationSource = localLocalTranslationSource;
-        mNetworkTranslationSource = networkTranslationSource;
+        mLocalTranslationSource = checkNotNull(localLocalTranslationSource);
+        mNetworkTranslationSource = checkNotNull(networkTranslationSource);
     }
 
 

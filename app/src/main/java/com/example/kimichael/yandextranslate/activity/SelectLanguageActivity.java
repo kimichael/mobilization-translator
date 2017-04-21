@@ -28,6 +28,10 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
+/**
+ * Created by Kim Michael on 31.03.17
+ * Activity is very small, so I don't break it into parts
+ */
 public class SelectLanguageActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         LanguageAdapter.OnLanguageItemClickListener {
 

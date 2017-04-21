@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.example.kimichael.yandextranslate.R;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class SettingsFragment extends Fragment {
 
 

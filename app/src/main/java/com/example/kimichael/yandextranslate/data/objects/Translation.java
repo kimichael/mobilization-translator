@@ -17,6 +17,9 @@ import com.google.common.collect.Iterables;
 
 import java.util.List;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class Translation {
 
     private String srcWord;

@@ -6,6 +6,9 @@ import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public interface TranslationRepository {
 
     interface LoadTranslationCallback {

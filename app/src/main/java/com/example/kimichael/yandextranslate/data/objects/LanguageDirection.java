@@ -4,6 +4,9 @@ import android.content.ContentValues;
 
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class LanguageDirection {
     private String srcLangCode, destLangCode;
 

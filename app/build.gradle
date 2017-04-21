@@ -40,7 +40,6 @@ dependencies {
     // Gson library for json deserializing
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     // Unit testing library
-    testCompile 'junit:junit:4.12'
     // Mockito testing library
     testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
     // Espresso UI Testing library
@@ -53,13 +52,11 @@ dependencies {
     // Dagger library
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-    provided 'javax.annotation:jsr250-api:1.0'
     // Apache IO utils library
     testCompile "org.apache.commons:commons-io:$rootProject.ext.apacheIOUtilsVersion"
     // Retrofit & OkHttp libraries for network calls
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     // RxJava adapter to support Retrofit
     compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxVersion"
@@ -68,6 +65,10 @@ dependencies {
     // Guava library for string formatting and preconditions
     compile "com.google.guava:guava:$rootProject.ext.guavaVersion"
 
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    testCompile 'junit:junit:4.12'
+    provided 'javax.annotation:jsr250-api:1.0'
 }
 
 configurations.all {

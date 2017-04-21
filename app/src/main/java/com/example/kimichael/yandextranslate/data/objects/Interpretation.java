@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by mikim on 31.03.17.
+ * Created by Kim Michael on 31.03.17.
  */
 public class Interpretation {
 

@@ -18,15 +18,19 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 import timber.log.Timber;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class LocalTranslationSourceImpl implements LocalTranslationSource {
 
     TranslationQueryHandler mQueryHandler;
     Parser mParser;
 
     public LocalTranslationSourceImpl(TranslationQueryHandler queryHandler, Parser parser) {
-        mQueryHandler = queryHandler;
-        mParser = parser;
+        mQueryHandler = checkNotNull(queryHandler);
+        mParser = checkNotNull(parser);
     }
 
     @Override

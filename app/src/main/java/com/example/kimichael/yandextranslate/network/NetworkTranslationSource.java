@@ -17,7 +17,9 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public interface NetworkTranslationSource {
 
     @Retention(RetentionPolicy.SOURCE)

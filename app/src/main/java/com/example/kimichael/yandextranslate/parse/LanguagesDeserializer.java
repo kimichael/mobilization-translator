@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class LanguagesDeserializer implements JsonDeserializer<List<Language>> {
 
     private static final String LANGUAGES = "langs";

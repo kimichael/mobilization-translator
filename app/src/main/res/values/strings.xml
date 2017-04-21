@@ -12,30 +12,41 @@
     <string name="content_authority" translatable="false">com.example.kimichael.yandextranslate</string>
 
     <!--Preferences for language direction choosing-->
-    <string name="pref_src_language">src_lang</string>
-    <string name="pref_dest_language">dest_lang</string>
-    <string name="pref_src_language_code">src_lang_code</string>
-    <string name="pref_dest_language_code">dest_lang_code</string>
+    <string name="pref_src_language" translatable="false">src_lang</string>
+    <string name="pref_dest_language" translatable="false">dest_lang</string>
+    <string name="pref_src_language_code" translatable="false">src_lang_code</string>
+    <string name="pref_dest_language_code" translatable="false">dest_lang_code</string>
     <string name="default_src_language">English</string>
     <string name="default_src_language_code">en</string>
     <string name="default_dest_language">Russian</string>
     <string name="default_dest_language_code">ru</string>
 
     <string name="no_internet_message">We can\'t access Yandex servers. Check your internet connection.</string>
-    
+    <string name="retry">Retry</string>
+
     <!-- Formatting strings -->
-    <string name="format_main_translation" formatted="false"><![CDATA[<font color=black>%1$s</font>]]></string>
-    <string name="format_definition_with_genus" formatted="false"><![CDATA[<font color=black>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
-    <string name="format_definition_with_transcription" formatted="false"><![CDATA[<font color=black>%1$s</font> [<i>%2$s</i>]]]></string>
-    <string name="format_part_of_speech" formatted="false"><![CDATA[<font color=\'#ba5d5d\'><small><i>%1$s</i></small></font>]]></string>
-    <string name="format_order" formatted="false"><![CDATA[<small><font color=\'c9c9c9\'>%1$d</font></small>&thinsp;&thinsp;]]></string>
-    <string name="format_interpretation_with_genus" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
-    <string name="format_interpretation" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
-    <string name="format_synonym_with_genus" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
-    <string name="format_synonym" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
-    <string name="format_meanings" formatted="false"><![CDATA[<font color=\'#7c3838\'>(%1$s)</font>]]></string>
-    <string name="format_example" formatted="false"><![CDATA[&emsp;<font color=\'#8ba2c9\'>%1$s - %2$s</font>]]></string>
+    <string name="format_main_translation" formatted="false" translatable="false"><![CDATA[<font color=black>%1$s</font>]]></string>
+    <string name="format_definition_with_genus" formatted="false" translatable="false"><![CDATA[<font color=black>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_definition_with_transcription" formatted="false" translatable="false"><![CDATA[<font color=black>%1$s</font> [<i>%2$s</i>]]]></string>
+    <string name="format_part_of_speech" formatted="false" translatable="false"><![CDATA[<font color=\'#ba5d5d\'><small><i>%1$s</i></small></font>]]></string>
+    <string name="format_order" formatted="false" translatable="false"><![CDATA[<small><font color=\'c9c9c9\'>%1$d</font></small>&thinsp;&thinsp;]]></string>
+    <string name="format_interpretation_with_genus" formatted="false" translatable="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_interpretation" formatted="false" translatable="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
+    <string name="format_synonym_with_genus" formatted="false" translatable="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_synonym" formatted="false" translatable="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
+    <string name="format_meanings" formatted="false" translatable="false"><![CDATA[<font color=\'#7c3838\'>(%1$s)</font>]]></string>
+    <string name="format_example" formatted="false" translatable="false"><![CDATA[&emsp;<font color=\'#8ba2c9\'>%1$s - %2$s</font>]]></string>
 
+    <!-- Messages from license of Yandex services -->
 
+    <!-- Titles for history fragment -->
+    <string name="history_tab_name">History</string>
+    <string name="bookmarks_tab_name">Bookmarks</string>
+
+    <!-- Keys for saveInstanceStates -->
+    <string name="key_chosen_fragment" translatable="false">chosen_fragment</string>
+    <string name="key_input_text" translatable="false">input_text</string>
+    <string name="yandex_dictionary_message">Powered by Yandex.Dictionary</string>
+    <string name="yandex_translate_message">Powered by Yandex.Translate</string>
 
 </resources>

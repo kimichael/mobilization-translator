@@ -9,6 +9,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class Composer {
 
     private Gson gson;

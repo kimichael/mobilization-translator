@@ -25,28 +25,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/languages_list" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/languages_list" />
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        style="@style/Base.Widget.AppCompat.ProgressBar"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            style="@style/Base.Widget.AppCompat.ProgressBar"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/error_message"
-        android:visibility="gone"
-        android:text="@string/no_internet_message"
-        android:layout_gravity="center"
-        android:gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/error_message"
+            android:visibility="gone"
+            android:text="@string/no_internet_message"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
     </FrameLayout>
 

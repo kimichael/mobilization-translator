@@ -15,7 +15,9 @@ import com.example.kimichael.yandextranslate.data.objects.Language;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.ViewHolder> {
 
     private List<Language> mItems = Collections.EMPTY_LIST;

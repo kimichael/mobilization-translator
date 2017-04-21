@@ -11,7 +11,9 @@ import com.example.kimichael.yandextranslate.parse.Composer;
 
 import java.lang.ref.WeakReference;
 
-
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationQueryHandler extends AsyncQueryHandler {
     private WeakReference<AsyncQueryListener> mTranslationListener;
     private WeakReference<AsyncQueryListener> mIsDictSupportedListener;

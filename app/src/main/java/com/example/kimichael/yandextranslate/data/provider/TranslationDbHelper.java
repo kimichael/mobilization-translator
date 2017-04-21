@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract.*;
 
+/**
+ * Created by Kim Michael on 31.03.17.
+ */
 public class TranslationDbHelper extends SQLiteOpenHelper {
 
     // If you change the schema, you should increment the version
