@@ -69,6 +69,7 @@ public class Translation {
         return translation;
     }
 
+    // Format translation to show to user
     // We need context to get formatting strings
     public Spanned toHtml(Context context) {
         StringBuilder sb = new StringBuilder();
@@ -86,7 +87,12 @@ public class Translation {
             }
         }
         for (int i = 0; i < definitions.size(); i++) {
-
+            Definition definition = definitions.get(i);
+            List<Interpretation> interpretations = definition.getInterpretations();
+            for (int j = 0; j < interpretations.size(); j++) {
+                Interpretation interpretation = interpretations.get(j);
+                
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_COMPACT);

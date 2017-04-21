@@ -11,10 +11,12 @@ import com.example.kimichael.yandextranslate.parse.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+import timber.log.Timber;
 
 
 public class LocalTranslationSourceImpl implements LocalTranslationSource {
@@ -48,14 +50,16 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
         }).doOnError(Throwable::printStackTrace), Single.create(new SingleOnSubscribe<List<Definition>>() {
             @Override
             public void subscribe(SingleEmitter<List<Definition>> e) throws Exception {
-                mQueryHandler.startDefinitionsQuery(requestedText, languageDirection);
+                Timber.d("Started definitions query");
                 TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
+                    Timber.d("Listener got a new definitions query");
                     if (cursor == null || cursor.getCount() == 0) {
                         e.onSuccess(null);
                         return;
                     }
                     List<Definition> definitions = new ArrayList<>();
                     while (cursor.moveToNext()) {
+                        Timber.d("New definition gotten from db");
                         Definition definition = new Definition(
                                 cursor.getString(cursor.getColumnIndex(
                                         TranslationContract.DefinitionEntry.COLUMN_WORD_KEY)),
@@ -77,7 +81,12 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 };
                 mQueryHandler.setDefinitionsListener(listener);
             }
-        }).doOnError(Throwable::printStackTrace), (translation, definitions) -> {
+        }).timeout(3L, TimeUnit.SECONDS)
+                .doOnError((throwable) -> {
+                    Timber.d("Error getting translation from local data source");
+                    throwable.printStackTrace();
+                }), (translation, definitions) -> {
+            Timber.d("Full translation gotten from local data source");
             translation.setDefinitions(definitions);
             return translation;
         });

@@ -1,9 +1,17 @@
 package com.example.kimichael.yandextranslate.sections.translate;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.TranslationRepository;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
+
+import timber.log.Timber;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TranslatePresenter implements TranslateContract.UserActionsListener {
 
@@ -14,17 +22,19 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     private LanguageDirection mLanguageDirection;
 
     public TranslatePresenter(TranslationRepository repository) {
-        this.mTranslationRepository = repository;
+        this.mTranslationRepository = checkNotNull(repository);
+        this.mTranslationRepository.retrieveLanguages();
+        this.mTranslationRepository.retrieveLanguageDirections();
     }
 
     public void onAttachView(TranslateContract.View view,
                              Language srcLanguage, Language destLanguage) {
-        this.mTranslateView = view;
-        this.mSrcLanguage = srcLanguage;
-        this.mDestLanguage = destLanguage;
-        mLanguageDirection = new LanguageDirection(srcLanguage, destLanguage);
-        this.mTranslationRepository.retrieveLanguages();
-        this.mTranslationRepository.retrieveLanguageDirections();
+        this.mTranslateView = checkNotNull(view);
+        if (mSrcLanguage == null && mDestLanguage == null) {
+            this.mSrcLanguage = checkNotNull(srcLanguage);
+            this.mDestLanguage = checkNotNull(destLanguage);
+        }
+        mLanguageDirection = new LanguageDirection(mSrcLanguage, mDestLanguage);
         view.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
     }
 
@@ -35,6 +45,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     @Override
     public void loadTranslation() {
         mTranslateView.setProgressSpinner(true);
+        Timber.d("Start loading");
         mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection,
                 new TranslationRepository.LoadTranslationCallback() {
                     @Override
@@ -82,6 +93,20 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         mDestLanguage = language;
         mLanguageDirection.setDestLangCode(language.getLanguageCode());
         updateViewLanguages();
+    }
+
+    @Override
+    public void saveLanguages(SharedPreferences prefs, Context context) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(R.string.pref_src_language_code),
+                mSrcLanguage.getLanguageCode());
+        editor.putString(context.getString(R.string.pref_src_language),
+                mSrcLanguage.getName());
+        editor.putString(context.getString(R.string.pref_dest_language_code),
+                mDestLanguage.getLanguageCode());
+        editor.putString(context.getString(R.string.pref_dest_language),
+                mDestLanguage.getName());
+        editor.apply();
     }
 
     private void updateViewLanguages() {

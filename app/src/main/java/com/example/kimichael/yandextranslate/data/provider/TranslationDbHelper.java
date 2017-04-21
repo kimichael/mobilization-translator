@@ -9,7 +9,7 @@ import com.example.kimichael.yandextranslate.data.provider.TranslationContract.*
 public class TranslationDbHelper extends SQLiteOpenHelper {
 
     // If you change the schema, you should increment the version
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
 
     private static final String DATABASE_NAME = "translation.db";
 
@@ -26,7 +26,11 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 WordEntry.COLUMN_SRC_WORD + " TEXT NOT NULL, " +
                 WordEntry.COLUMN_DEST_WORD + " TEXT NOT NULL, " +
                 WordEntry.COLUMN_SRC_LANG + " TEXT NOT NULL, " +
-                WordEntry.COLUMN_DEST_LANG + " TEXT NOT NULL" + " )";
+                WordEntry.COLUMN_DEST_LANG + " TEXT NOT NULL," +
+                "UNIQUE (" + WordEntry.COLUMN_SRC_WORD + ", " +
+                            WordEntry.COLUMN_SRC_LANG + ", " +
+                            WordEntry.COLUMN_DEST_LANG + ") ON CONFLICT REPLACE"
+                + " )";
 
         // Create a table for definitions. Each definition has one or more translations.
         final String SQL_CREATE_DEFINITION_TABLE = "CREATE TABLE " + DefinitionEntry.TABLE_NAME + " (" +
@@ -40,6 +44,10 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 DefinitionEntry.COLUMN_JSON_CHILDREN + " TEXT," +
                 DefinitionEntry.COLUMN_WORD_KEY + " INTEGER NOT NULL," +
                 DefinitionEntry.COLUMN_ORDER + " INTEGER NOT NULL, " +
+                "UNIQUE (" + DefinitionEntry.COLUMN_TEXT + ", " +
+                            DefinitionEntry.COLUMN_SRC_LANG + ", " +
+                            DefinitionEntry.COLUMN_DEST_LANG + ", " +
+                            DefinitionEntry.COLUMN_ORDER + ") ON CONFLICT REPLACE, " +
                 "FOREIGN KEY (" + DefinitionEntry.COLUMN_WORD_KEY + ") REFERENCES "
                     + WordEntry.TABLE_NAME +
                     "(" + WordEntry.COLUMN_SRC_WORD + ")" + ")";
@@ -49,7 +57,7 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 LanguageEntry._ID + " INTEGER PRIMARY KEY," +
                 LanguageEntry.COLUMN_LANGUAGE_KEY + " TEXT NOT NULL, " +
                 LanguageEntry.COLUMN_LANGUAGE_NAME + " TEXT NOT NULL, " +
-                "UNIQUE(" + LanguageEntry.COLUMN_LANGUAGE_KEY + ") ON CONFLICT ROLLBACK" + " )";
+                "UNIQUE(" + LanguageEntry.COLUMN_LANGUAGE_KEY + ") ON CONFLICT REPLACE" + " )";
 
         // Create a table for language directions
         final String SQL_CREATE_LANGUAGE_DIRECTION_TABLE = "CREATE TABLE " + LanguageDirectionEntry.TABLE_NAME + " (" +
@@ -58,7 +66,7 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + " TEXT NOT NULL," +
                 LanguageDirectionEntry.COLUMN_API_DICT_AVAILABLE + " INTEGER NOT NULL DEFAULT 1," +
                 "UNIQUE (" + LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE + ", "
-                           + LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + ") ON CONFLICT ROLLBACK" + ")";
+                           + LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE + ") ON CONFLICT REPLACE" + ")";
 
 
         db.execSQL(SQL_CREATE_WORD_TABLE);

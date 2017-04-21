@@ -65,6 +65,8 @@ dependencies {
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxVersion"
     // Timber library (logging)
     compile "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+    // Guava library for string formatting and preconditions
+    compile "com.google.guava:guava:$rootProject.ext.guavaVersion"
 
 }
 

@@ -1,5 +1,8 @@
 package com.example.kimichael.yandextranslate.sections.translate;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
@@ -38,5 +41,7 @@ public interface TranslateContract {
 
         void onAttachView(TranslateContract.View view,
                           Language srcLanguage, Language destLanguage);
+
+        void saveLanguages(SharedPreferences prefs, Context context);
     }
 }

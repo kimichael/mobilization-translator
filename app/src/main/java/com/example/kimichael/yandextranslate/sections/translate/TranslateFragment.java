@@ -41,6 +41,7 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
@@ -127,7 +128,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void clearTranslation() {
-
+        mMainTranslation.setText("");
+        mExpandedTranslation.setText("");
     }
 
     // Show clear button when user starts typing
@@ -137,7 +139,11 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             mClearButton.setVisibility(GONE);
         else
             mClearButton.setVisibility(VISIBLE);
+    }
 
+    @OnTextChanged(R.id.translated_word_edit_text)
+    public void onTextChanged(Editable s) {
+        clearTranslation();
     }
 
     // Clear input text on clicking clear button and let edit text get focus
@@ -166,8 +172,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             inputManager.toggleSoftInput(0, 0);
             // And make editText lose focus
             mInputEditText.clearFocus();
-
-            commitTranslateAction();
             return true;
         }
         return false;
@@ -183,12 +187,18 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     // Start translating the text in EditText
     private void commitTranslateAction() {
-        Log.v(LOG_TAG, "Started loading");
+        Timber.d("Commit translate action");
         // If anything is written in the editText box
         if (mInputEditText.getText().length() > 0)
             // Start translating
             mPresenter.loadTranslation();
 
+    }
+
+    @Override
+    public void onPause() {
+        mPresenter.saveLanguages(mSharedPreferences, getContext());
+        super.onPause();
     }
 
     // Set languages at the toolbar (chosen translation direction)
@@ -238,7 +248,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public String getRequestedText() {
-        return mInputEditText.getText().toString();
+        return mInputEditText.getText().toString().toLowerCase();
     }
 
     // Section with toolbar ui elements

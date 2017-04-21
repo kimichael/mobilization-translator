@@ -180,7 +180,7 @@ public class TranslationProvider extends ContentProvider {
 
         switch (match) {
             case WORD: {
-                long _id = db.insert(TranslationContract.WordEntry.TABLE_NAME, null, values);
+                long _id = db.insertWithOnConflict(TranslationContract.WordEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (_id > 0)
                     returnUri = TranslationContract.WordEntry.buildWordUri(_id);
                 else
@@ -188,7 +188,7 @@ public class TranslationProvider extends ContentProvider {
                 break;
             }
             case DEFINITION: {
-                long _id = db.insert(TranslationContract.DefinitionEntry.TABLE_NAME, null, values);
+                long _id = db.insertWithOnConflict(TranslationContract.DefinitionEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (_id > 0)
                     returnUri = TranslationContract.DefinitionEntry.buildDefinitionUri(_id);
                 else

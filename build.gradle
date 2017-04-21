@@ -37,4 +37,5 @@ ext {
     retrofitVersion = '2.2.0'
     rxVersion = '2.0.1'
     timberVersion = '4.5.1'
+    guavaVersion = '20.0'
 }
