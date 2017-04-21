@@ -40,10 +40,7 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
             public void subscribe(SingleEmitter<Translation> e) throws Exception {
                 TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
                     Translation translation = Translation.from(cursor);
-                    if (translation == null)
-                        e.onError(new Throwable("Translation not found in db"));
-                    else
-                        e.onSuccess(translation);
+                    e.onSuccess(translation);
                 };
                 mQueryHandler.setTranslationQueryListener(listener);
             }

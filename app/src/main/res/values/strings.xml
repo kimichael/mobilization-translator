@@ -25,7 +25,17 @@
     
     <!-- Formatting strings -->
     <string name="format_main_translation" formatted="false"><![CDATA[<font color=black>%1$s</font>]]></string>
-    <string name="format_definition_with_genus" formatted="false"><![CDATA[<font color=black>%1$s</font> [<font color=\'c9c9c9\'>%2$s</font>]]]></string>
-    <string name="format_definition_with_transcription" formatted="false"><![CDATA[<font color=black>%1$s</font> <i>%2$s</i>]]></string>
+    <string name="format_definition_with_genus" formatted="false"><![CDATA[<font color=black>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_definition_with_transcription" formatted="false"><![CDATA[<font color=black>%1$s</font> [<i>%2$s</i>]]]></string>
+    <string name="format_part_of_speech" formatted="false"><![CDATA[<font color=\'#ba5d5d\'><small><i>%1$s</i></small></font>]]></string>
+    <string name="format_order" formatted="false"><![CDATA[<small><font color=\'c9c9c9\'>%1$d</font></small>&thinsp;&thinsp;]]></string>
+    <string name="format_interpretation_with_genus" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_interpretation" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
+    <string name="format_synonym_with_genus" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font> <font color=\'c9c9c9\'>%2$s</font>]]></string>
+    <string name="format_synonym" formatted="false"><![CDATA[<font color=\'#2a64c1\'>%1$s</font>]]></string>
+    <string name="format_meanings" formatted="false"><![CDATA[<font color=\'#7c3838\'>(%1$s)</font>]]></string>
+    <string name="format_example" formatted="false"><![CDATA[&emsp;<font color=\'#8ba2c9\'>%1$s - %2$s</font>]]></string>
+
+
 
 </resources>

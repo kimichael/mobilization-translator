@@ -69,6 +69,8 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         mDestLanguage = temp;
         mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
         mLanguageDirection.swapLanguages();
+        mTranslateView.clearTranslation();
+        loadTranslation();
     }
 
     @Override
