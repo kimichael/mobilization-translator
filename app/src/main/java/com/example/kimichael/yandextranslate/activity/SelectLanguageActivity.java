@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.adapters.LanguageAdapter;
-import com.example.kimichael.yandextranslate.data.TranslationContract;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.util.Utility;
 

@@ -3,9 +3,28 @@ package com.example.kimichael.yandextranslate;
 
 import android.app.Application;
 
-public class YandexApplication extends Application {
+import com.example.kimichael.yandextranslate.components.ActivityComponent;
+import com.example.kimichael.yandextranslate.components.DaggerActivityComponent;
+import com.example.kimichael.yandextranslate.modules.DataModule;
+
+import timber.log.Timber;
+
+public class YandexApplication extends Application implements ComponentProvider {
+
+    private ActivityComponent mActivityComponent;
+
     @Override
     public void onCreate() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .dataModule(new DataModule(this))
+                .build();
+        if (BuildConfig.DEBUG)
+            Timber.plant(new Timber.DebugTree());
         super.onCreate();
+    }
+
+    @Override
+    public ActivityComponent provideComponent() {
+        return mActivityComponent;
     }
 }

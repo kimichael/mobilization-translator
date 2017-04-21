@@ -6,6 +6,8 @@ import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -22,8 +24,8 @@ public interface YandexTranslateClient {
     String UI = "ui";
 
     @POST("tr.json/translate")
-    Call<Translation> getTranslation(@Query(TEXT) String text, @Query(LANG) String langDirection);
+    Single<Translation> getTranslation(@Query(TEXT) String text, @Query(LANG) String langDirection);
 
     @GET("tr.json/getLangs")
-    Call<List<Language>> getLanguages(@Query(UI) String ui);
+    Single<List<Language>> getLanguages(@Query(UI) String ui);
 }

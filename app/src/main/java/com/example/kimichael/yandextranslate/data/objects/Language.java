@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.kimichael.yandextranslate.data.TranslationContract;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
 public class Language implements Parcelable {
 

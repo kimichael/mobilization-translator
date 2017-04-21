@@ -8,6 +8,6 @@
 
     <dimen name="navigation_bar_elevation">8dp</dimen>
 
-    <dimen name="textbox_inner_margin">8dp</dimen>
-    <dimen name="small_button_padding">8dp</dimen>
+    <dimen name="textbox_inner_padding">8dp</dimen>
+    <dimen name="small_button_padding">4dp</dimen>
 </resources>

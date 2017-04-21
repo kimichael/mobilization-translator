@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.data;
+package com.example.kimichael.yandextranslate.data.provider;
 
 import android.annotation.TargetApi;
 import android.content.ContentProvider;
@@ -20,17 +20,21 @@ public class TranslationProvider extends ContentProvider {
     static final int LANGUAGE = 200;
     static final int LANGUAGE_DIRECTION = 201;
 
-    // definition.word_id = ?
-    private static final String sDefinitionByWordIdSelection =
+    // definition.word_id = ? AND src_lang = ? AND dest_lang = ?
+    private static final String sDefinitionByWordAndLangDirectionSelection =
             TranslationContract.DefinitionEntry.TABLE_NAME + "." +
-            TranslationContract.DefinitionEntry.COLUMN_WORD_KEY + " = ?";
+            TranslationContract.DefinitionEntry.COLUMN_WORD_KEY + " = ? AND " +
+                    TranslationContract.DefinitionEntry.COLUMN_SRC_LANG + " = ? AND " +
+                    TranslationContract.DefinitionEntry.COLUMN_DEST_LANG + " = ?";
 
+    // word.src_word = ? AND src_lang = ? AND dest_lang = ?
     private static final String sTranslationByWordAndLangSelection =
             TranslationContract.WordEntry.TABLE_NAME + "." +
                     TranslationContract.WordEntry.COLUMN_SRC_WORD + " = ? AND " +
                     TranslationContract.WordEntry.COLUMN_SRC_LANG + " = ? AND " +
                     TranslationContract.WordEntry.COLUMN_DEST_LANG + " = ? ";
 
+    // lang_direction.src_lang_code = ? AND dest_lang_code = ?
     private static final String sTranslationDirectionBySrcLangAndDestLangSelection =
             TranslationContract.LanguageDirectionEntry.TABLE_NAME + "." +
                     TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE + " = ? AND " +
@@ -68,14 +72,16 @@ public class TranslationProvider extends ContentProvider {
                 null,
                 null,
                 sortOrder,
-                "1"
+                null
         );
     }
 
-    private Cursor getDefinitionsByWordId(Uri uri, String[] projection, String sortOrder) {
-        Integer wordId = TranslationContract.DefinitionEntry.getWordIdFromUri(uri);
-        String[] selectionArgs = new String[] {wordId.toString()};
-        String selection = sDefinitionByWordIdSelection;
+    private Cursor getDefinitionsByWordAndLangDirection(Uri uri, String[] projection, String sortOrder) {
+        String word = TranslationContract.DefinitionEntry.getWordFromUri(uri);
+        String srcLang = TranslationContract.DefinitionEntry.getSrcLangFromUri(uri);
+        String destLang = TranslationContract.DefinitionEntry.getDestLangFromUri(uri);
+        String[] selectionArgs = new String[] {word, srcLang, destLang};
+        String selection = sDefinitionByWordAndLangDirectionSelection;
 
         return mOpenHelper.getReadableDatabase().query(
                 TranslationContract.DefinitionEntry.TABLE_NAME,
@@ -121,10 +127,10 @@ public class TranslationProvider extends ContentProvider {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = TranslationContract.CONTENT_AUTHORITY;
 
-        uriMatcher.addURI(authority, TranslationContract.PATH_WORD + "/*", WORD);
+        uriMatcher.addURI(authority, TranslationContract.PATH_WORD + "/*/*", WORD);
         uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE, LANGUAGE);
         uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE_DIRECTION, LANGUAGE_DIRECTION);
-        uriMatcher.addURI(authority, TranslationContract.PATH_DEFINITION + "/*", DEFINITION);
+        uriMatcher.addURI(authority, TranslationContract.PATH_DEFINITION, DEFINITION);
         return uriMatcher;
     }
 
@@ -140,7 +146,7 @@ public class TranslationProvider extends ContentProvider {
                 break;
             }
             case DEFINITION: {
-                retCursor = getDefinitionsByWordId(uri, projection, sortOrder);
+                retCursor = getDefinitionsByWordAndLangDirection(uri, projection, sortOrder);
                 break;
             }
             case LANGUAGE: {

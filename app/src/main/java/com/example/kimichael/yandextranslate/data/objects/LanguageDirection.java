@@ -2,7 +2,7 @@ package com.example.kimichael.yandextranslate.data.objects;
 
 import android.content.ContentValues;
 
-import com.example.kimichael.yandextranslate.data.TranslationContract;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
 public class LanguageDirection {
     private String srcLangCode, destLangCode;
@@ -10,6 +10,15 @@ public class LanguageDirection {
     public LanguageDirection(String srcLangCode, String destLangCode) {
         this.srcLangCode = srcLangCode;
         this.destLangCode = destLangCode;
+    }
+
+    public LanguageDirection(Language srcLang, Language destLanguage) {
+        this.srcLangCode = srcLang.getLanguageCode();
+        this.destLangCode = destLanguage.getLanguageCode();
+    }
+
+    public String getLanguageDirectionForApi() {
+        return srcLangCode + "-" + destLangCode;
     }
 
     public String getSrcLangCode() {
@@ -33,5 +42,11 @@ public class LanguageDirection {
         contentValues.put(TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE, srcLangCode);
         contentValues.put(TranslationContract.LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE, destLangCode);
         return contentValues;
+    }
+
+    public void swapLanguages() {
+        String temp = srcLangCode;
+        srcLangCode = destLangCode;
+        destLangCode = temp;
     }
 }

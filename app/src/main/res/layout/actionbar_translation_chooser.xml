@@ -25,8 +25,8 @@
             android:textColor="@color/black"
             android:textAllCaps="false"
             android:textSize="16sp"
-            android:fontFamily="serif"
-            android:layout_toLeftOf="@id/swap_lang_button"/>
+            android:layout_toStartOf="@id/swap_lang_button"
+            android:gravity="center"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -36,8 +36,8 @@
             android:textColor="@color/black"
             android:textAllCaps="false"
             android:textSize="16sp"
-            android:fontFamily="serif"
-            android:layout_toRightOf="@id/swap_lang_button"/>
+            android:layout_toEndOf="@id/swap_lang_button"
+            android:gravity="center"/>
 
         </RelativeLayout>
 

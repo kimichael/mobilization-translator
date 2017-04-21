@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Я.Переводчик</string>
+    <string name="app_name">Translator</string>
 
     <!-- Navigation bottom bar titles -->
     <string name="navigation_translate_title">Translate</string>
@@ -22,5 +22,10 @@
     <string name="default_dest_language_code">ru</string>
 
     <string name="no_internet_message">We can\'t access Yandex servers. Check your internet connection.</string>
+    
+    <!-- Formatting strings -->
+    <string name="format_main_translation" formatted="false"><![CDATA[<font color=black>%1$s</font>]]></string>
+    <string name="format_definition_with_genus" formatted="false"><![CDATA[<font color=black>%1$s</font> [<font color=\'c9c9c9\'>%2$s</font>]]]></string>
+    <string name="format_definition_with_transcription" formatted="false"><![CDATA[<font color=black>%1$s</font> <i>%2$s</i>]]></string>
 
 </resources>

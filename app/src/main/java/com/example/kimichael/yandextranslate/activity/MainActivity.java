@@ -19,8 +19,8 @@ import com.example.kimichael.yandextranslate.ComponentProvider;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.components.DaggerActivityComponent;
+import com.example.kimichael.yandextranslate.modules.DataModule;
 import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
-import com.example.kimichael.yandextranslate.modules.ContextModule;
 import com.example.kimichael.yandextranslate.sections.settings.SettingsFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
 
@@ -28,7 +28,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, ComponentProvider {
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({FRAGMENT_STATUS_TRANSLATE, FRAGMENT_STATUS_BOOKMARKS, FRAGMENT_STATUS_SETTINGS})
@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .contextModule(new ContextModule(this))
-                .build();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
@@ -100,11 +97,6 @@ public class MainActivity extends AppCompatActivity
         }
         transaction.commit();
         return true;
-    }
-
-    @Override
-    public ActivityComponent provideComponent() {
-        return mActivityComponent;
     }
 
     @Override

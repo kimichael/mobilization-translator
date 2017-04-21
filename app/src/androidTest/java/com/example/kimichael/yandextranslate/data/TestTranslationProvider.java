@@ -6,15 +6,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.test.AndroidTestCase;
 import android.test.ProviderTestCase2;
 
-import com.example.kimichael.yandextranslate.R;
-import com.example.kimichael.yandextranslate.data.objects.Translation;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
+import com.example.kimichael.yandextranslate.data.provider.TranslationProvider;
 
 public class TestTranslationProvider extends ProviderTestCase2<TranslationProvider> {
 

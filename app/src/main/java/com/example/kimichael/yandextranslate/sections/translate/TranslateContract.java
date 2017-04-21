@@ -1,7 +1,7 @@
 package com.example.kimichael.yandextranslate.sections.translate;
 
-import com.example.kimichael.yandextranslate.data.objects.DictionaryTranslation;
 import com.example.kimichael.yandextranslate.data.objects.Language;
+import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 /**
  * Created by mikim on 22.03.17.
@@ -15,11 +15,15 @@ public interface TranslateContract {
 
         void clearInput(boolean showKeyboard);
 
+        void clearTranslation();
+
         void setProgressSpinner(boolean active);
 
-        void showTranslation(DictionaryTranslation dictionaryTranslation);
+        void showTranslation(Translation translation);
 
-        String getRequestedWord();
+        void updateEmptyView();
+
+        String getRequestedText();
 
     }
 
@@ -31,5 +35,8 @@ public interface TranslateContract {
 
         void setSrcLanguage(Language language);
         void setDestLanguage(Language language);
+
+        void onAttachView(TranslateContract.View view,
+                          Language srcLanguage, Language destLanguage);
     }
 }

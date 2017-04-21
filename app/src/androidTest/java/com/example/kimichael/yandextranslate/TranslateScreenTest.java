@@ -46,4 +46,14 @@ public class TranslateScreenTest {
         onView(withId(R.id.translated_word_edit_text))
                 .check(matches(hasFocus()));
     }
+
+    @Test
+    public void onStart_showDefaultLanguageDirection() {
+
+        onView(withId(R.id.src_lang_button))
+                .check(matches(withText(R.string.default_src_language)));
+        onView(withId(R.id.dest_lang_button))
+                .check(matches(withText(R.string.default_dest_language)));
+
+    }
 }

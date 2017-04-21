@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -19,13 +21,16 @@ android {
             testCoverageEnabled = true
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes.each {
         // Api key for "Яндекс.Переводчик"
         it.buildConfigField 'String', 'YANDEX_TRANSLATE_API_KEY', '\"trnsl.1.1.20170317T004858Z.f9d0ae4ee84e8e45.94edd3777af008a1671b216fad5772d2b03c9e02\"'
         it.buildConfigField 'String', 'YANDEX_DICTIONARY_API_KEY', '\"dict.1.1.20170324T140358Z.9eee29b647b96fe9.d246164677bcabfc4c26177bb8cadbec1d0dcdb5\"'
     }
 }
-
 
 dependencies {
     // Android support libraries
@@ -55,6 +60,12 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    // RxJava adapter to support Retrofit
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxVersion"
+    // Timber library (logging)
+    compile "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
 }
 
 configurations.all {
