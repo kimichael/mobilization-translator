@@ -24,6 +24,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void update(int i, HistoryRecord historyRecord) {
         if (mItems.contains(historyRecord)) {
             mItems.get(mItems.indexOf(historyRecord)).getTranslation().setIsMarked(historyRecord.getTranslation().isMarked());
+            notifyItemChanged(mItems.indexOf(historyRecord));
         } else {
             insert(i, historyRecord);
         }

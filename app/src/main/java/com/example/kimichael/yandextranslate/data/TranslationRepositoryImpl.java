@@ -73,6 +73,7 @@ public class TranslationRepositoryImpl implements TranslationRepository {
 
                     @Override
                     public void onSuccess(Translation translation) {
+                        // Assert that downloaded word is what we want
                         if (requestedText.equals(pendingWord)) {
                             translation.setSrcWord(requestedText.toLowerCase());
                             callback.onTranslationLoaded(translation);
