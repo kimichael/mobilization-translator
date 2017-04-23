@@ -14,6 +14,7 @@ import io.reactivex.Single;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Powered by Retrofit client to fetch translations
  */
 public interface NetworkTranslationSource {
 

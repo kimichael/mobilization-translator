@@ -77,8 +77,10 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                         @Override
                         public void onTranslationLoaded(Translation translation) {
                             mCachedTranslation = translation;
-                            mTranslateView.setProgressSpinner(false);
-                            mTranslateView.showTranslation(translation);
+                            if (mTranslateView != null) {
+                                mTranslateView.setProgressSpinner(false);
+                                mTranslateView.showTranslation(translation);
+                            }
                         }
 
                         @Override

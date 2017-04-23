@@ -53,9 +53,13 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         NetworkTranslationSource.YANDEX_TRANSLATE_API;
                 return mLocalTranslationSource.getTranslation(requestedText, languageDirection, api)
                         .timeout(5L, TimeUnit.SECONDS)
-                        .onErrorResumeNext(throwable -> {
+                        // If we cannot find the translation on our device, we go to network
+                        .onErrorResumeNext((Throwable throwable) -> {
                             Timber.d("Call to network");
                             return mNetworkTranslationSource.getTranslation(requestedText, languageDirection, api);
+                            // If we cannot find the translation on dictionary, we look in Yandex.Translate
+                        }).onErrorResumeNext(throwable -> {
+                            return mNetworkTranslationSource.getTranslation(requestedText, languageDirection, NetworkTranslationSource.YANDEX_TRANSLATE_API);
                         });
             }
         });
