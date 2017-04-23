@@ -1,35 +1,37 @@
 package com.example.kimichael.yandextranslate.data;
 
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.util.Log;
 
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
-import com.example.kimichael.yandextranslate.network.NetworkTranslationSource;
+import com.example.kimichael.yandextranslate.data.network.NetworkTranslationSource;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by Kim Michael on 31.03.17.
+ * Created by Kim Michael on 31.03.17
  */
 public class TranslationRepositoryImpl implements TranslationRepository {
 
-    //TODO Finish this class
     private LocalTranslationSource mLocalTranslationSource;
     private NetworkTranslationSource mNetworkTranslationSource;
+    // It's a word that is waited by presenter
+    private String pendingWord;
 
     public TranslationRepositoryImpl(LocalTranslationSource localLocalTranslationSource,
                                      NetworkTranslationSource networkTranslationSource) {
@@ -42,6 +44,7 @@ public class TranslationRepositoryImpl implements TranslationRepository {
     public void getTranslation(final String requestedText,
                                           final LanguageDirection languageDirection,
                                           @NonNull final LoadTranslationCallback callback) {
+        pendingWord = requestedText;
         Single<Translation> translationSingle = mLocalTranslationSource.isDictSupported(languageDirection).flatMap(new Function<Boolean, SingleSource<Translation>>() {
             @Override
             public SingleSource<Translation> apply(Boolean aBoolean) throws Exception {
@@ -49,6 +52,7 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         NetworkTranslationSource.YANDEX_DICTIONARY_API :
                         NetworkTranslationSource.YANDEX_TRANSLATE_API;
                 return mLocalTranslationSource.getTranslation(requestedText, languageDirection, api)
+                        .timeout(5L, TimeUnit.SECONDS)
                         .onErrorResumeNext(throwable -> {
                             Timber.d("Call to network");
                             return mNetworkTranslationSource.getTranslation(requestedText, languageDirection, api);
@@ -65,9 +69,10 @@ public class TranslationRepositoryImpl implements TranslationRepository {
 
                     @Override
                     public void onSuccess(Translation translation) {
-                        translation.setSrcWord(requestedText.toLowerCase());
-                        mLocalTranslationSource.saveTranslation(translation, languageDirection);
-                        callback.onTranslationLoaded(translation);
+                        if (requestedText.equals(pendingWord)) {
+                            translation.setSrcWord(requestedText.toLowerCase());
+                            callback.onTranslationLoaded(translation);
+                        }
                     }
 
                     @Override
@@ -119,5 +124,20 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         Timber.d("Cannot retrieve language directions");
                     }
                 });
+    }
+
+    @Override
+    public void bookmarkTranslation(HistoryRecord historyRecord) {
+        mLocalTranslationSource.bookmarkTranslation(historyRecord);
+    }
+
+    @Override
+    public void saveTranslationToHistory(Translation translation, LanguageDirection languageDirection) {
+        mLocalTranslationSource.saveTranslation(translation, languageDirection);
+    }
+
+    @Override
+    public void clearHistory() {
+        mLocalTranslationSource.clearHistory();
     }
 }

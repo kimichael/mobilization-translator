@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.example.kimichael.yandextranslate">
+    <item
+        app:state_marked="true"
+        android:state_pressed="false"
+        android:drawable="@drawable/bookmark_marked" />
+    <item
+        app:state_marked="true"
+        android:state_pressed="true"
+        android:drawable="@drawable/bookmark_marked_pressed" />
+    <item
+        app:state_marked="false"
+        android:state_pressed="true"
+        android:drawable="@drawable/bookmark_unmarked_pressed" />
+    <item
+        app:state_marked="false"
+        android:state_pressed="false"
+        android:drawable="@drawable/bookmark_unmarked" />
+</selector>

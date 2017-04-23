@@ -1,15 +1,10 @@
-package com.example.kimichael.yandextranslate.network;
+package com.example.kimichael.yandextranslate.data.network;
 
 import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 
-import com.example.kimichael.yandextranslate.data.LocalTranslationSource;
-import com.example.kimichael.yandextranslate.data.TranslationRepository;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
-
-import org.reactivestreams.Subscription;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

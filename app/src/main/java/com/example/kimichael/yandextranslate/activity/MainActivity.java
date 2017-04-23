@@ -2,22 +2,23 @@ package com.example.kimichael.yandextranslate.activity;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.example.kimichael.yandextranslate.FragmentSwitcher;
 import com.example.kimichael.yandextranslate.R;
-import com.example.kimichael.yandextranslate.components.ActivityComponent;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.sections.history.StorageFragment;
 import com.example.kimichael.yandextranslate.sections.settings.SettingsFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
@@ -31,7 +32,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Kim Michael on 31.03.17
  */
 public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener,
+        FragmentSwitcher {
+
+
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({FRAGMENT_STATUS_TRANSLATE, FRAGMENT_STATUS_BOOKMARKS, FRAGMENT_STATUS_SETTINGS})
@@ -122,6 +126,11 @@ public class MainActivity extends AppCompatActivity
         }
         transaction.commit();
         return true;
+    }
+
+    @Override
+    public void switchFragment(@ChosenFragmentStatus int fragment) {
+        resetFragmentState(fragment);
     }
 
     @Override

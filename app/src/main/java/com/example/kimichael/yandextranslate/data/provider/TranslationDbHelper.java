@@ -4,7 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.kimichael.yandextranslate.data.provider.TranslationContract.*;
+import com.example.kimichael.yandextranslate.data.objects.Language;
+import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract.DefinitionEntry;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract.LanguageDirectionEntry;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract.LanguageEntry;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract.WordEntry;
 
 /**
  * Created by Kim Michael on 31.03.17.
@@ -12,7 +17,7 @@ import com.example.kimichael.yandextranslate.data.provider.TranslationContract.*
 public class TranslationDbHelper extends SQLiteOpenHelper {
 
     // If you change the schema, you should increment the version
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 25;
 
     private static final String DATABASE_NAME = "translation.db";
 
@@ -30,6 +35,7 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
                 WordEntry.COLUMN_DEST_WORD + " TEXT NOT NULL, " +
                 WordEntry.COLUMN_SRC_LANG + " TEXT NOT NULL, " +
                 WordEntry.COLUMN_DEST_LANG + " TEXT NOT NULL," +
+                WordEntry.COLUMN_BOOKMARK + " INTEGER, " +
                 "UNIQUE (" + WordEntry.COLUMN_SRC_WORD + ", " +
                             WordEntry.COLUMN_SRC_LANG + ", " +
                             WordEntry.COLUMN_DEST_LANG + ") ON CONFLICT REPLACE"
@@ -80,6 +86,10 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + WordEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DefinitionEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + LanguageDirectionEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + LanguageEntry.TABLE_NAME);
+        onCreate(db);
     }
 }

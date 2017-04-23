@@ -47,6 +47,30 @@ public class LanguageDirection {
         return contentValues;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LanguageDirection that = (LanguageDirection) o;
+
+        if (!srcLangCode.equals(that.srcLangCode)) return false;
+        return destLangCode.equals(that.destLangCode);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = srcLangCode.hashCode();
+        result = 31 * result + destLangCode.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return srcLangCode.toUpperCase() + "-" + destLangCode.toUpperCase();
+    }
+
     public void swapLanguages() {
         String temp = srcLangCode;
         srcLangCode = destLangCode;

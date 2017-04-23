@@ -2,7 +2,7 @@ package com.example.kimichael.yandextranslate.data;
 
 import android.support.annotation.NonNull;
 
-import com.example.kimichael.yandextranslate.data.objects.Language;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
@@ -10,6 +10,7 @@ import com.example.kimichael.yandextranslate.data.objects.Translation;
  * Created by Kim Michael on 31.03.17.
  */
 public interface TranslationRepository {
+
 
     interface LoadTranslationCallback {
         void onTranslationLoaded(Translation translation);
@@ -22,4 +23,9 @@ public interface TranslationRepository {
 
     void retrieveLanguages();
     void retrieveLanguageDirections();
+
+    void saveTranslationToHistory(Translation translation, LanguageDirection languageDirection);
+    void bookmarkTranslation(HistoryRecord historyRecord);
+
+    void clearHistory();
 }

@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +19,16 @@ import android.widget.TextView;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.adapters.LanguageAdapter;
-import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 import com.example.kimichael.yandextranslate.data.objects.Language;
+import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 import com.example.kimichael.yandextranslate.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static android.view.View.GONE;
 
@@ -41,8 +45,9 @@ public class SelectLanguageActivity extends AppCompatActivity implements LoaderM
 
     LanguageAdapter mLanguageAdapter;
     List<Language> mLanguageList;
-    ProgressBar mLoadingSpinner;
-    TextView mErrorMessage;
+    @BindView(R.id.spinner) ProgressBar mLoadingSpinner;
+    @BindView(R.id.error_message) TextView mErrorMessage;
+    Unbinder unbinder;
 
     private static final String[] LANGUAGE_COLUMNS = {
             TranslationContract.LanguageEntry.TABLE_NAME + "." + TranslationContract.LanguageEntry._ID,
@@ -59,8 +64,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements LoaderM
 
         mLanguageList = new ArrayList<>();
         mLanguageAdapter = new LanguageAdapter(mLanguageList, this, this);
-        mLoadingSpinner = (ProgressBar) findViewById(R.id.spinner);
-        mErrorMessage = (TextView) findViewById(R.id.error_message);
+        unbinder = ButterKnife.bind(this);
 
         // Recycler view with languages
         RecyclerView languagesList = (RecyclerView) findViewById(R.id.languages_list);
@@ -107,6 +111,12 @@ public class SelectLanguageActivity extends AppCompatActivity implements LoaderM
                                 null,
                                 sortOrder
                 );
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbinder.unbind();
+        super.onDestroy();
     }
 
     @Override

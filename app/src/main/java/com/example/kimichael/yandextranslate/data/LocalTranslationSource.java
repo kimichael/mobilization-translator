@@ -1,12 +1,10 @@
 package com.example.kimichael.yandextranslate.data;
 
-import android.support.annotation.BoolRes;
-import android.support.annotation.NonNull;
-
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
-import com.example.kimichael.yandextranslate.network.NetworkTranslationSource;
+import com.example.kimichael.yandextranslate.data.network.NetworkTranslationSource;
 
 import java.util.List;
 
@@ -24,7 +22,9 @@ public interface LocalTranslationSource {
     void saveTranslation(Translation translation, LanguageDirection languageDirection);
     void saveLanguageDirections(List<LanguageDirection> languageDirections);
     void saveLanguages(List<Language> languages);
+    void bookmarkTranslation(HistoryRecord historyRecord);
 
     Single<Boolean> isDictSupported(LanguageDirection direction);
 
+    void clearHistory();
 }

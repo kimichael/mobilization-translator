@@ -3,6 +3,8 @@ package com.example.kimichael.yandextranslate.components;
 import android.app.Application;
 
 import com.example.kimichael.yandextranslate.modules.DataModule;
+import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
+import com.example.kimichael.yandextranslate.sections.history.StorageFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
 
 import javax.inject.Singleton;
@@ -16,5 +18,6 @@ import dagger.Component;
 @Component(modules = {DataModule.class})
 public interface ActivityComponent {
     void inject(TranslateFragment fragment);
-    void inject(Application application);
+    void inject(HistoryFragment fragment);
+    void inject(StorageFragment fragment);
 }

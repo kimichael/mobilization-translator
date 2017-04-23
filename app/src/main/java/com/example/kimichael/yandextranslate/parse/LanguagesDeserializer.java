@@ -1,7 +1,6 @@
 package com.example.kimichael.yandextranslate.parse;
 
 import com.example.kimichael.yandextranslate.data.objects.Language;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

@@ -1,8 +1,5 @@
 package com.example.kimichael.yandextranslate.parse;
 
-import android.os.Parcelable;
-
-import com.example.kimichael.yandextranslate.data.objects.Definition;
 import com.example.kimichael.yandextranslate.data.objects.Interpretation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

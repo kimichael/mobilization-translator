@@ -14,7 +14,7 @@
             android:src="@drawable/button_swap_horizontal"
             android:id="@+id/swap_lang_button"
             android:background="@drawable/button_actionbar_transparent"
-            android:padding="@dimen/small_button_padding"
+            android:padding="@dimen/button_small_padding"
             android:layout_centerInParent="true"/>
 
         <Button

@@ -44,6 +44,8 @@ public class TranslationContract {
         public static final String COLUMN_SRC_LANG = "src_lang";
         // Language, to which we translate the word
         public static final String COLUMN_DEST_LANG = "dest_lang";
+        // Is our translation bookmarked?
+        public static final String COLUMN_BOOKMARK = "bookmark";
 
         public static Uri buildWordUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -54,6 +56,12 @@ public class TranslationContract {
                     .appendQueryParameter(COLUMN_SRC_WORD, word)
                     .appendPath(srcLang)
                     .appendPath(destLang)
+                    .build();
+        }
+
+        public static Uri buildClearAllUri() {
+            return CONTENT_URI.buildUpon()
+                    .appendPath("clear_all")
                     .build();
         }
 
@@ -68,7 +76,6 @@ public class TranslationContract {
         public static String getDestLangSettingFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
-
     }
 
     // DictionaryTranslation can have several definitions.

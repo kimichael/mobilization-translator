@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import timber.log.Timber;
+
 /**
  * Created by Kim Michael on 31.03.17.
  */
@@ -20,8 +22,10 @@ public class TranslationProvider extends ContentProvider {
 
     static final int WORD = 100;
     static final int DEFINITION = 101;
+    static final int HISTORY = 102;
     static final int LANGUAGE = 200;
     static final int LANGUAGE_DIRECTION = 201;
+    static final int CLEAR_HISTORY = 300;
 
     // definition.word_id = ? AND src_lang = ? AND dest_lang = ?
     private static final String sDefinitionByWordAndLangDirectionSelection =
@@ -58,6 +62,20 @@ public class TranslationProvider extends ContentProvider {
                 null,
                 null,
                 sortOrder
+        );
+    }
+
+    private int updateWordBySrcWordAndLanguageDirection(Uri uri, ContentValues values) {
+        String wordSetting = TranslationContract.WordEntry.getWordSettingFromUri(uri);
+        String srcLangSetting = TranslationContract.WordEntry.getSrcLangSettingFromUri(uri);
+        String destLangSetting = TranslationContract.WordEntry.getDestLangSettingFromUri(uri);
+        String[] selectionArgs = new String[]{wordSetting, srcLangSetting, destLangSetting};
+        String selection = sTranslationByWordAndLangSelection;
+        return mOpenHelper.getWritableDatabase().update(
+                TranslationContract.WordEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
         );
     }
 
@@ -131,6 +149,8 @@ public class TranslationProvider extends ContentProvider {
         final String authority = TranslationContract.CONTENT_AUTHORITY;
 
         uriMatcher.addURI(authority, TranslationContract.PATH_WORD + "/*/*", WORD);
+        uriMatcher.addURI(authority, TranslationContract.PATH_WORD, HISTORY);
+        uriMatcher.addURI(authority, TranslationContract.PATH_WORD + "/*", CLEAR_HISTORY);
         uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE, LANGUAGE);
         uriMatcher.addURI(authority, TranslationContract.PATH_LANGUAGE_DIRECTION, LANGUAGE_DIRECTION);
         uriMatcher.addURI(authority, TranslationContract.PATH_DEFINITION, DEFINITION);
@@ -148,6 +168,19 @@ public class TranslationProvider extends ContentProvider {
                 retCursor = getTranslationByWordAndLangSelection(uri, projection, sortOrder);
                 break;
             }
+            // "word/"
+            case HISTORY:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        TranslationContract.WordEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // "definition/"
             case DEFINITION: {
                 retCursor = getDefinitionsByWordAndLangDirection(uri, projection, sortOrder);
                 break;
@@ -245,6 +278,10 @@ public class TranslationProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         TranslationContract.LanguageDirectionEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case CLEAR_HISTORY:
+                Timber.d("Clearing history");
+                rowsDeleted = db.delete(TranslationContract.WordEntry.TABLE_NAME, null, null);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -263,8 +300,7 @@ public class TranslationProvider extends ContentProvider {
 
         switch (match) {
             case WORD:
-                rowsUpdated = db.update(TranslationContract.WordEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+                rowsUpdated = updateWordBySrcWordAndLanguageDirection(uri, values);
                 break;
             case DEFINITION:
                 rowsUpdated = db.update(TranslationContract.DefinitionEntry.TABLE_NAME, values, selection,

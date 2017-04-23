@@ -28,6 +28,8 @@
             android:imeOptions="actionDone"
             android:background="@drawable/edit_text_border_selector"
             android:padding="@dimen/textbox_inner_padding"
+            android:paddingEnd="48dp"
+            android:paddingBottom="16dp"
             android:focusable="true"/>
 
         <ImageButton
@@ -38,7 +40,7 @@
             android:background="@null"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:padding="@dimen/small_button_padding"/>
+            android:padding="@dimen/button_small_padding"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -48,14 +50,14 @@
             android:background="@null"
             android:layout_alignBottom="@id/translated_word_edit_text"
             android:layout_alignStart="@id/translated_word_edit_text"
-            android:padding="@dimen/small_button_padding" />
+            android:padding="@dimen/button_small_padding" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/button_speaker_selector"
             android:background="@null"
-            android:padding="@dimen/small_button_padding"
+            android:padding="@dimen/button_small_padding"
             android:layout_below="@id/mic_button"
             android:layout_alignParentEnd="true" />
 
@@ -70,10 +72,12 @@
 
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/translation_zone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -86,7 +90,8 @@
 
                 <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -148,10 +153,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-            <ImageButton
+            <com.example.kimichael.yandextranslate.buttons.BookmarkButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/mark_button"
+                android:id="@+id/bookmark_button"
+                android:src="@drawable/bookmark_button"
+                android:background="@null"
+                android:layout_margin="@dimen/button_small_margin"
                 />
 
         </LinearLayout>

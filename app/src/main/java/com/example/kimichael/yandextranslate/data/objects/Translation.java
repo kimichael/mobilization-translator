@@ -3,7 +3,6 @@ package com.example.kimichael.yandextranslate.data.objects;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -11,7 +10,6 @@ import android.text.Spanned;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -26,6 +24,17 @@ public class Translation {
     private String translatedWord;
     @Nullable
     private List<Definition> definitions;
+    private boolean isMarked;
+
+    public Translation(String srcWord, String translatedWord) {
+        this.srcWord = srcWord;
+        this.translatedWord = translatedWord;
+        this.isMarked = false;
+    }
+
+    public Translation() {
+        this.isMarked = false;
+    }
 
     public String getSrcWord() {
         return srcWord;
@@ -41,6 +50,37 @@ public class Translation {
 
     public void setTranslatedWord(String translatedWord) {
         this.translatedWord = translatedWord;
+    }
+
+    public boolean isMarked() {
+        return isMarked;
+    }
+
+    public void setIsMarked(boolean marked) {
+        isMarked = marked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Translation that = (Translation) o;
+
+        if (!srcWord.equals(that.srcWord)) return false;
+        return translatedWord.equals(that.translatedWord);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = srcWord.hashCode();
+        result = 31 * result + translatedWord.hashCode();
+        return result;
+    }
+
+    public void switchMarked() {
+        setIsMarked(!isMarked);
     }
 
     @Nullable
@@ -62,6 +102,7 @@ public class Translation {
         contentValues.put(TranslationContract.WordEntry.COLUMN_DEST_WORD, translatedWord);
         contentValues.put(TranslationContract.WordEntry.COLUMN_SRC_LANG, direction.getSrcLangCode());
         contentValues.put(TranslationContract.WordEntry.COLUMN_DEST_LANG, direction.getDestLangCode());
+        contentValues.put(TranslationContract.WordEntry.COLUMN_BOOKMARK, isMarked ? 1 : 0);
         return contentValues;
     }
 
@@ -73,6 +114,7 @@ public class Translation {
         Translation translation = new Translation();
         translation.setSrcWord(cursor.getString(cursor.getColumnIndex(TranslationContract.WordEntry.COLUMN_SRC_WORD)));
         translation.setTranslatedWord(cursor.getString(cursor.getColumnIndex(TranslationContract.WordEntry.COLUMN_DEST_WORD)));
+        translation.setIsMarked(cursor.getInt(cursor.getColumnIndex(TranslationContract.WordEntry.COLUMN_BOOKMARK)) > 0);
         return translation;
     }
 

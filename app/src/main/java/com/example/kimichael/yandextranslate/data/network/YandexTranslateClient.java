@@ -1,14 +1,11 @@
-package com.example.kimichael.yandextranslate.network;
+package com.example.kimichael.yandextranslate.data.network;
 
-import com.example.kimichael.yandextranslate.data.objects.Definition;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;

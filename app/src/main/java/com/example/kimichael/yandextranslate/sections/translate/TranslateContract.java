@@ -3,7 +3,9 @@ package com.example.kimichael.yandextranslate.sections.translate;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
+import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 /**
@@ -42,10 +44,16 @@ public interface TranslateContract {
 
         void onAttachView(TranslateContract.View view,
                           Language srcLanguage, Language destLanguage);
+        void onDetachView();
 
         void saveState(SharedPreferences prefs, Context context);
 
         void clearCache();
 
+        void saveTranslationToHistory(Translation translation);
+
+        void bookmarkTranslation(HistoryRecord historyRecord);
+
+        void clearHistory();
     }
 }

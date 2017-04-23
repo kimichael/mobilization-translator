@@ -14,7 +14,17 @@
         app:tabSelectedTextColor="@color/black"
         app:tabIndicatorColor="@color/black"
         app:tabTextColor="@color/gray"
-        app:tabMode="fixed" />
+        app:tabMode="fixed"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/clear_history_button"
+        android:src="@drawable/button_delete"
+        android:background="@drawable/button_actionbar_transparent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"/>
 
 
 </RelativeLayout>

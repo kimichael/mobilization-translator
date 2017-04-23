@@ -1,10 +1,12 @@
 package com.example.kimichael.yandextranslate.data.provider;
 
 import android.content.AsyncQueryHandler;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
 import com.example.kimichael.yandextranslate.data.objects.Definition;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.example.kimichael.yandextranslate.parse.Composer;
@@ -23,6 +25,7 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
     private static final int TRANSLATION_TOKEN = 0;
     private static final int IS_DICT_SUPPORTED_TOKEN = 1;
     private static final int DEFINITIONS_TOKEN = 2;
+    private static final int CLEAR_HISTORY_TOKEN = 3;
 
     private static final String[] languageDirectionProjection = new String[] {
             TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE,
@@ -32,7 +35,8 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
 
     private static final String[] translationProjection = new String[] {
             TranslationContract.WordEntry.COLUMN_SRC_WORD,
-            TranslationContract.WordEntry.COLUMN_DEST_WORD
+            TranslationContract.WordEntry.COLUMN_DEST_WORD,
+            TranslationContract.WordEntry.COLUMN_BOOKMARK
     };
 
     private static final String[] definitionProjection = new String[] {
@@ -129,6 +133,18 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
                 TranslationContract.DefinitionEntry.buildDefinitionWithWordAndLangDirection(
                         requestedText, languageDirection.getSrcLangCode(), languageDirection.getDestLangCode()),
                 definitionProjection, null, null, TranslationContract.DefinitionEntry.COLUMN_ORDER + " ASC");
+    }
+
+    public void startBookmarkUpdate(HistoryRecord historyRecord) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TranslationContract.WordEntry.COLUMN_BOOKMARK, historyRecord.getTranslation().isMarked() ? 1 : 0);
+        startUpdate(TRANSLATION_TOKEN, null, TranslationContract.WordEntry.buildWordWithSrcWordAndLangDirectionSetting(
+                historyRecord.getTranslation().getSrcWord(), historyRecord.getLanguageDirection().getSrcLangCode(),
+                historyRecord.getLanguageDirection().getDestLangCode()), contentValues, null, null);
+    }
+
+    public void clearHistory() {
+        startDelete(CLEAR_HISTORY_TOKEN, null, TranslationContract.WordEntry.buildClearAllUri(), null, null);
     }
 
 }

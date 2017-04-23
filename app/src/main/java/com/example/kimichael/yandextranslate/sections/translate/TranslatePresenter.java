@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.TranslationRepository;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
@@ -24,6 +25,8 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     private Language mSrcLanguage, mDestLanguage;
     private LanguageDirection mLanguageDirection;
     private Translation mCachedTranslation;
+    // This is a record that can be get from history fragment to be shown
+    private HistoryRecord mRecord;
 
     public TranslatePresenter(TranslationRepository repository) {
         this.mTranslationRepository = checkNotNull(repository);
@@ -42,6 +45,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         view.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
     }
 
+    @Override
     public void onDetachView() {
         this.mTranslateView = null;
     }
@@ -52,31 +56,43 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     @Override
-    public void loadTranslation() {
-        mTranslateView.setProgressSpinner(true);
-        if (mCachedTranslation != null && mCachedTranslation.getSrcWord().equals(mTranslateView.getRequestedText())) {
-            Timber.d("Found cached translation");
-            mTranslateView.setProgressSpinner(false);
-            mTranslateView.showTranslation(mCachedTranslation);
-            return;
-        }
-        Timber.d("Start loading");
-        mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection,
-                new TranslationRepository.LoadTranslationCallback() {
-                    @Override
-                    public void onTranslationLoaded(Translation translation) {
-                        mTranslateView.setProgressSpinner(false);
-                        mCachedTranslation = translation;
-                        mTranslateView.showTranslation(translation);
-                    }
+    public void saveTranslationToHistory(Translation translation) {
+        Timber.d("Translation saved");
+        if (translation != null)
+            mTranslationRepository.saveTranslationToHistory(translation, mLanguageDirection);
+    }
 
-                    @Override
-                    public void onLoadError() {
-                        Timber.d("Error loading");
-                        mTranslateView.setProgressSpinner(false);
-                        mTranslateView.updateEmptyView();
-                    }
-                });
+    @Override
+    public void loadTranslation() {
+
+        if (mTranslateView != null) {
+                mTranslateView.setProgressSpinner(true);
+            if (mCachedTranslation != null && mCachedTranslation.getSrcWord().equals(mTranslateView.getRequestedText())) {
+                Timber.d("Found cached translation");
+                mTranslateView.setProgressSpinner(false);
+                mTranslateView.showTranslation(mCachedTranslation);
+                return;
+            }
+            Timber.d("Start loading");
+            mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection,
+                    new TranslationRepository.LoadTranslationCallback() {
+                        @Override
+                        public void onTranslationLoaded(Translation translation) {
+                            mCachedTranslation = translation;
+                            mTranslateView.setProgressSpinner(false);
+                            mTranslateView.showTranslation(translation);
+                        }
+
+                        @Override
+                        public void onLoadError() {
+                            Timber.d("Error loading");
+                            if (mTranslateView != null) {
+                                mTranslateView.setProgressSpinner(false);
+                                mTranslateView.updateEmptyView();
+                            }
+                        }
+                    });
+        }
     }
 
     @Override
@@ -87,6 +103,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
         mLanguageDirection.swapLanguages();
         mTranslateView.clearTranslation();
+        clearCache();
         loadTranslation();
     }
 
@@ -131,6 +148,18 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     private void updateViewLanguages() {
-        mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
+        if (mTranslateView != null)
+            mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
+    }
+
+    @Override
+    public void clearHistory() {
+        Timber.d("Clearing history");
+        mTranslationRepository.clearHistory();
+    }
+
+    @Override
+    public void bookmarkTranslation(HistoryRecord historyRecord) {
+        mTranslationRepository.bookmarkTranslation(historyRecord);
     }
 }

@@ -2,9 +2,7 @@ package com.example.kimichael.yandextranslate.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -42,12 +40,8 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.languageName.setText(mItems.get(position).getName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onItemClick(mItems.get(holder.getAdapterPosition()));
-            }
-        });
+        holder.itemView.setOnClickListener(v ->
+                mListener.onItemClick(mItems.get(holder.getAdapterPosition())));
     }
 
     @Override

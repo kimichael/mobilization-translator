@@ -4,7 +4,6 @@ import com.example.kimichael.yandextranslate.data.objects.Example;
 import com.example.kimichael.yandextranslate.data.objects.Interpretation;
 import com.example.kimichael.yandextranslate.data.objects.Meaning;
 import com.example.kimichael.yandextranslate.data.objects.Synonym;
-import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

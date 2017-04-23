@@ -1,12 +1,13 @@
 package com.example.kimichael.yandextranslate.data;
 
 import com.example.kimichael.yandextranslate.data.objects.Definition;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 import com.example.kimichael.yandextranslate.data.provider.TranslationQueryHandler;
-import com.example.kimichael.yandextranslate.network.NetworkTranslationSource;
+import com.example.kimichael.yandextranslate.data.network.NetworkTranslationSource;
 import com.example.kimichael.yandextranslate.parse.Parser;
 
 import java.util.ArrayList;
@@ -94,6 +95,11 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
     }
 
     @Override
+    public void bookmarkTranslation(HistoryRecord historyRecord) {
+        mQueryHandler.startBookmarkUpdate(historyRecord);
+    }
+
+    @Override
     public void saveTranslation(Translation translation, LanguageDirection languageDirection) {
         mQueryHandler.startTranslationInsert(translation, languageDirection);
         if (translation.isFull())
@@ -147,5 +153,10 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 mQueryHandler.startIsDictSupportedQuery(direction);
             }
         });
+    }
+
+    @Override
+    public void clearHistory() {
+        mQueryHandler.clearHistory();
     }
 }

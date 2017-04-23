@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.example.kimichael.yandextranslate.ComponentProvider;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.activity.SelectLanguageActivity;
+import com.example.kimichael.yandextranslate.buttons.BookmarkButton;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
@@ -64,11 +65,15 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @BindView(R.id.yandex_message) TextView mYandexMessage;
     @BindView(R.id.no_internet_message_block) LinearLayout mNoInternetBlock;
     @BindView(R.id.retry_button) Button mRetryButton;
+    @BindView(R.id.translation_zone) LinearLayout mTranslationZone;
+    @BindView(R.id.bookmark_button) BookmarkButton mBookmarkButton;
     ToolbarViewHolder mToolbarViewHolder;
     // A special field of ButterKnife to nullify all binded views
     private Unbinder unbinder;
     private ActivityComponent mActivityComponent;
     private SharedPreferences mSharedPreferences;
+    private Translation shownTranslation;
+    private boolean mAttached;
 
     @Override
     public void setInput(String input) {
@@ -85,6 +90,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         mActivityComponent.inject(this);
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
+        mAttached = false;
     }
 
     @Override
@@ -100,13 +106,25 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mToolbarViewHolder = new ToolbarViewHolder(toolbarView);
 
-        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         unbinder = ButterKnife.bind(this, rootview);
-
         // Make editText multiline and with done action button
         mInputEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mInputEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
         clearInput(false);
+        return rootview;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mAttached = true;
         mPresenter.onAttachView(this,
                 new Language(
                         mSharedPreferences.getString(getString(R.string.pref_src_language),
@@ -120,7 +138,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                                 getString(R.string.default_dest_language_code))));
         mInputEditText.setText(mSharedPreferences.getString(getString(R.string.key_input_text), ""));
         commitTranslateAction();
-        return rootview;
     }
 
     @Override
@@ -139,26 +156,33 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         unbinder.unbind();
     }
 
-    @Override
-    public void clearTranslation() {
-        mMainTranslation.setText("");
-        mExpandedTranslation.setText("");
-        mYandexMessage.setText("");
+    @OnClick(R.id.bookmark_button)
+    public void addToBookmarks() {
+        boolean isMarked = !mBookmarkButton.isMarked();
+        mBookmarkButton.setMarked(isMarked);
+        shownTranslation.setIsMarked(isMarked);
+        mPresenter.saveTranslationToHistory(shownTranslation);
     }
 
     // Show clear button when user starts typing
     @OnTextChanged(value = R.id.translated_word_edit_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void afterTextChanged(Editable s) {
-        if (s.length() < 1)
+        if (s.length() < 1) {
             mClearButton.setVisibility(GONE);
-        else
+            clearTranslation();
+        } else {
             mClearButton.setVisibility(VISIBLE);
+            if (mAttached)
+                mPresenter.loadTranslation();
+        }
     }
 
-    @OnTextChanged(R.id.translated_word_edit_text)
-    public void onTextChanged(Editable s) {
-        clearTranslation();
-    }
+//    @OnTextChanged(R.id.translated_word_edit_text)
+//    public void onTextChanged(Editable s) {
+//        clearTranslation();
+//        if (!s.toString().equals(""))
+//            mPresenter.loadTranslation();
+//    }
 
     @OnClick(R.id.retry_button)
     public void retryConnection() {
@@ -175,11 +199,44 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     public void clearInput(boolean showKeyboard) {
         mInputEditText.setText(null);
         mClearButton.setVisibility(View.INVISIBLE);
+        clearTranslation();
         if (!mInputEditText.hasFocus() && showKeyboard)
             // Set focus
             if (mInputEditText.requestFocus())
                 // Set soft keyboard
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+
+    @Override
+    public void clearTranslation() {
+        Timber.d("Translation cleared");
+        mMainTranslation.setText("");
+        mExpandedTranslation.setText("");
+        mYandexMessage.setText("");
+        mTranslationZone.setVisibility(View.GONE);
+        mBookmarkButton.setVisibility(View.GONE);
+        mBookmarkButton.setMarked(false);
+        mLoadingSpinner.setVisibility(GONE);
+    }
+
+    @Override
+    public void showTranslation(Translation translation) {
+        shownTranslation = translation;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mMainTranslation.setText(Html.fromHtml(getString(R.string.format_main_translation, translation.getTranslatedWord()), Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            mMainTranslation.setText(Html.fromHtml(getString(R.string.format_main_translation, translation.getTranslatedWord())));
+        }
+        if (translation.isFull()) {
+            mExpandedTranslation.setText(translation.toHtml(getContext()));
+            mYandexMessage.setText(getString(R.string.yandex_dictionary_message));
+        } else {
+            mExpandedTranslation.setText("");
+            mYandexMessage.setText(getString(R.string.yandex_translate_message));
+        }
+        mTranslationZone.setVisibility(View.VISIBLE);
+        mBookmarkButton.setVisibility(View.VISIBLE);
+        mBookmarkButton.setMarked(translation.isMarked());
     }
 
     // Start translating when user presses done button
@@ -202,6 +259,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     public void onEditTextFocusChange(boolean hasFocus) {
         if (!hasFocus) {
             commitTranslateAction();
+            mPresenter.saveTranslationToHistory(shownTranslation);
         }
     }
 
@@ -218,6 +276,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @Override
     public void onPause() {
         mPresenter.saveState(mSharedPreferences, getContext());
+        mPresenter.onDetachView();
+        mAttached = false;
         super.onPause();
     }
 
@@ -241,6 +301,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                     break;
             }
             mPresenter.clearCache();
+            clearTranslation();
             commitTranslateAction();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -248,28 +309,17 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void setProgressSpinner(boolean active) {
-        mLoadingSpinner.setVisibility(active ? VISIBLE : GONE);
-    }
-
-    @Override
-    public void showTranslation(Translation translation) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mMainTranslation.setText(Html.fromHtml(getString(R.string.format_main_translation, translation.getTranslatedWord()), Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            mMainTranslation.setText(Html.fromHtml(getString(R.string.format_main_translation, translation.getTranslatedWord())));
-        }
-        if (translation.isFull()) {
-            mExpandedTranslation.setText(translation.toHtml(getContext()));
-            mYandexMessage.setText(getString(R.string.yandex_dictionary_message));
-        } else {
-            mYandexMessage.setText(getString(R.string.yandex_translate_message));
-        }
+        if (mLoadingSpinner != null)
+            mLoadingSpinner.setVisibility(active ? VISIBLE : GONE);
     }
 
     @Override
     public void updateEmptyView() {
         if (!Utility.isNetworkAvailable(getContext())){
             mNoInternetBlock.setVisibility(VISIBLE);
+        } else {
+            if (mMainTranslation != null)
+                clearTranslation();
         }
     }
 

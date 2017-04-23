@@ -20,4 +20,6 @@
     <string name="retry">Повторить</string>
     <string name="history_tab_name">История</string>
     <string name="bookmarks_tab_name">Закладки</string>
+    <string name="no_history_placeholder">Нет переводов в истории</string>
+    <string name="no_bookmarks_placeholder">Нет переводов в избранном</string>
 </resources>
