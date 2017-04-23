@@ -56,7 +56,7 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
                     Timber.d("Listener got a new definitions query");
                     if (cursor == null || cursor.getCount() == 0) {
-                        e.onSuccess(null);
+                        e.onSuccess(new ArrayList<>());
                         return;
                     }
                     List<Definition> definitions = new ArrayList<>();
@@ -84,12 +84,10 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 mQueryHandler.setDefinitionsListener(listener);
             }
         }).timeout(3L, TimeUnit.SECONDS)
-                .doOnError((throwable) -> {
-                    Timber.d("Error getting translation from local data source");
-                    throwable.printStackTrace();
-                }), (translation, definitions) -> {
-            Timber.d("Full translation gotten from local data source");
-            translation.setDefinitions(definitions);
+                .doOnError(Throwable::printStackTrace), (translation, definitions) -> {
+            Timber.d("Translation got from local data source");
+            if (definitions.size() > 0)
+                translation.setDefinitions(definitions);
             return translation;
         });
     }

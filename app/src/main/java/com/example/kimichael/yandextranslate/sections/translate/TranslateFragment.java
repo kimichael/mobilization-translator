@@ -30,6 +30,7 @@ import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.activity.SelectLanguageActivity;
 import com.example.kimichael.yandextranslate.buttons.BookmarkButton;
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.example.kimichael.yandextranslate.util.Utility;
@@ -161,7 +162,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         boolean isMarked = !mBookmarkButton.isMarked();
         mBookmarkButton.setMarked(isMarked);
         shownTranslation.setIsMarked(isMarked);
-        mPresenter.saveTranslationToHistory(shownTranslation);
+        mPresenter.bookmarkTranslation(new HistoryRecord(shownTranslation, null));
     }
 
     // Show clear button when user starts typing

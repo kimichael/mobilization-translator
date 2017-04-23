@@ -25,8 +25,6 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     private Language mSrcLanguage, mDestLanguage;
     private LanguageDirection mLanguageDirection;
     private Translation mCachedTranslation;
-    // This is a record that can be get from history fragment to be shown
-    private HistoryRecord mRecord;
 
     public TranslatePresenter(TranslationRepository repository) {
         this.mTranslationRepository = checkNotNull(repository);
@@ -160,6 +158,8 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
 
     @Override
     public void bookmarkTranslation(HistoryRecord historyRecord) {
+        if (historyRecord.getLanguageDirection() == null)
+            historyRecord.setLanguageDirection(mLanguageDirection);
         mTranslationRepository.bookmarkTranslation(historyRecord);
     }
 }
