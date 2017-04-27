@@ -48,7 +48,7 @@
     <!-- Keys for saveInstanceStates -->
     <string name="key_chosen_fragment" translatable="false">chosen_fragment</string>
     <string name="key_input_text" translatable="false">input_text</string>
-    <string name="yandex_dictionary_message">Powered by Yandex.Dictionary</string>
-    <string name="yandex_translate_message">Powered by Yandex.Translate</string>
+    <string name="yandex_dictionary_message"><a href="http://translate.yandex.com/">Powered by Yandex.Dictionary</a></string>
+    <string name="yandex_translate_message"><a href="http://api.yandex.com/dictionary">Powered by Yandex.Translate</a></string>
 
 </resources>

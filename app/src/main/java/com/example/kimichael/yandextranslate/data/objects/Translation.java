@@ -3,13 +3,12 @@ package com.example.kimichael.yandextranslate.data.objects;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.text.Spanned;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
+import com.example.kimichael.yandextranslate.util.Utility;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 
@@ -184,10 +183,6 @@ public class Translation {
                 }
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_COMPACT);
-        }
-        return Html.fromHtml(sb.toString());
-
+        return Utility.fromHtml(sb.toString());
     }
 }

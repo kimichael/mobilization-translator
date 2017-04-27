@@ -1,7 +1,6 @@
 package com.example.kimichael.yandextranslate;
 
 import com.example.kimichael.yandextranslate.activity.MainActivity;
-import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 
 /**
  * Created by Kim Michael on 24.04.17

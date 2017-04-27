@@ -41,22 +41,27 @@ dependencies {
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     // Unit testing library
     // Mockito testing library
-    testCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    testCompile "org.mockito:mockito-android:$rootProject.ext.mockitoVersion"
+    androidTestCompile "org.mockito:mockito-android:$rootProject.ext.mockitoVersion"
     // Espresso UI Testing library
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
     // Butterknife library
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     // Dagger library
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     // Apache IO utils library
     testCompile "org.apache.commons:commons-io:$rootProject.ext.apacheIOUtilsVersion"
     // Retrofit & OkHttp libraries for network calls
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     // RxJava adapter to support Retrofit
     compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxVersion"
@@ -64,11 +69,15 @@ dependencies {
     compile "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
     // Guava library for string formatting and preconditions
     compile "com.google.guava:guava:$rootProject.ext.guavaVersion"
-
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    testCompile 'junit:junit:4.12'
+    // JUnit
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    // For Retrolamba support
     provided 'javax.annotation:jsr250-api:1.0'
+
+    // Library that mocks injected objects DaggerMock
+    testCompile 'com.github.fabioCollini:DaggerMock:0.6.4'
+    androidTestCompile 'com.github.fabioCollini:DaggerMock:0.6.4'
+
 }
 
 configurations.all {

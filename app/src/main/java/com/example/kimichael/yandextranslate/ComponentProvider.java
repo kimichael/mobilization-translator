@@ -1,5 +1,7 @@
 package com.example.kimichael.yandextranslate;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.example.kimichael.yandextranslate.components.ActivityComponent;
 
 /**
@@ -7,4 +9,6 @@ import com.example.kimichael.yandextranslate.components.ActivityComponent;
  */
 public interface ComponentProvider {
     ActivityComponent provideComponent();
+    @VisibleForTesting
+    void setComponent(ActivityComponent component);
 }

@@ -3,9 +3,8 @@ package com.example.kimichael.yandextranslate.parse;
 import com.example.kimichael.yandextranslate.data.TranslationRepository;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
-public class InMemoryRepositoryTest {
+import org.junit.Rule;
 
-    private TranslationRepository repository;
-    Translation translation;
+public class InMemoryRepositoryTest {
 
 }

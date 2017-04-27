@@ -4,6 +4,7 @@
     android:gravity="center">
 
     <ImageView
+        android:id="@+id/settings_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/button_nav_settings_black" />

@@ -101,8 +101,12 @@ public class TranslationProvider extends ContentProvider {
         String word = TranslationContract.DefinitionEntry.getWordFromUri(uri);
         String srcLang = TranslationContract.DefinitionEntry.getSrcLangFromUri(uri);
         String destLang = TranslationContract.DefinitionEntry.getDestLangFromUri(uri);
-        String[] selectionArgs = new String[] {word, srcLang, destLang};
-        String selection = sDefinitionByWordAndLangDirectionSelection;
+        String[] selectionArgs = null;
+        String selection = null;
+        if (word != null && srcLang != null && destLang != null) {
+            selectionArgs = new String[]{word, srcLang, destLang};
+            selection = sDefinitionByWordAndLangDirectionSelection;
+        }
 
         return mOpenHelper.getReadableDatabase().query(
                 TranslationContract.DefinitionEntry.TABLE_NAME,

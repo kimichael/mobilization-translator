@@ -1,8 +1,6 @@
 package com.example.kimichael.yandextranslate.components;
 
-import android.app.Application;
-
-import com.example.kimichael.yandextranslate.modules.DataModule;
+import com.example.kimichael.yandextranslate.module.DataModule;
 import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
 import com.example.kimichael.yandextranslate.sections.history.StorageFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;

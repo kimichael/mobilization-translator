@@ -27,7 +27,7 @@ public class TestTranslationProvider extends ProviderTestCase2<TranslationProvid
 
     public void testClearRecordsFromProvider() {
         mContext.getContentResolver().delete(
-                TranslationContract.WordEntry.CONTENT_URI,
+                TranslationContract.WordEntry.buildClearAllUri(),
                 null,
                 null
         );

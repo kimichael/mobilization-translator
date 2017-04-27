@@ -5,12 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +39,11 @@ import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
+import com.example.kimichael.yandextranslate.util.EspressoIdlingResource;
 import com.example.kimichael.yandextranslate.util.Utility;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -74,6 +84,9 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     private ActivityComponent mActivityComponent;
     private SharedPreferences mSharedPreferences;
     private Translation shownTranslation;
+    // Timer for delaying translating typed text
+    private Timer mTimer = new Timer();
+
     private boolean mAttached;
 
     @Override
@@ -82,6 +95,9 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     }
 
     @Inject TranslateContract.UserActionsListener mPresenter;
+
+    // Used for testing, will be null in prod
+    @Nullable EspressoIdlingResource mIdlingResource;
 
     public TranslateFragment() {}
 
@@ -111,6 +127,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         // Make editText multiline and with done action button
         mInputEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mInputEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        mYandexMessage.setMovementMethod(LinkMovementMethod.getInstance());
         clearInput(false);
         return rootview;
     }
@@ -168,13 +185,24 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     // Show clear button when user starts typing
     @OnTextChanged(value = R.id.translated_word_edit_text, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void afterTextChanged(Editable s) {
+
         if (s.length() < 1) {
             mClearButton.setVisibility(GONE);
             clearTranslation();
         } else {
             mClearButton.setVisibility(VISIBLE);
-            if (mAttached)
-                mPresenter.loadTranslation();
+            if (mAttached) {
+                mTimer.cancel();
+                mTimer = new Timer();
+                long DELAY = 400;
+                mTimer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                getActivity().runOnUiThread(() -> mPresenter.loadTranslation());
+                            }
+                        }, DELAY);
+            }
         }
     }
 
@@ -222,6 +250,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void showTranslation(Translation translation) {
+        if (mInputEditText.getText().length() < 1)
+            return;
         shownTranslation = translation;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mMainTranslation.setText(Html.fromHtml(getString(R.string.format_main_translation, translation.getTranslatedWord()), Html.FROM_HTML_MODE_COMPACT));
@@ -231,6 +261,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         if (translation.isFull()) {
             mExpandedTranslation.setText(translation.toHtml(getContext()));
             mYandexMessage.setText(getString(R.string.yandex_dictionary_message));
+            Linkify.addLinks(mYandexMessage, Linkify.WEB_URLS);
         } else {
             mExpandedTranslation.setText("");
             mYandexMessage.setText(getString(R.string.yandex_translate_message));
@@ -268,10 +299,10 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     private void commitTranslateAction() {
         Timber.d("Commit translate action");
         // If anything is written in the editText box
-        if (mInputEditText.getText().length() > 0)
+        if (mInputEditText.getText().length() > 0) {
             // Start translating
             mPresenter.loadTranslation();
-
+        }
     }
 
     @Override
@@ -354,5 +385,11 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             mPresenter.swapLanguages();
         }
 
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        return EspressoIdlingResource.getIdlingResource();
     }
 }

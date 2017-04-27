@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.modules;
+package com.example.kimichael.yandextranslate.module;
 
 import android.content.Context;
 

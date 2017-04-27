@@ -104,6 +104,9 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onBookmarkButtonClick(HistoryRecord historyRecord) {
         mPresenter.bookmarkTranslation(historyRecord);
+        if (mPresenter.getCachedTranslation().equals(historyRecord.getTranslation())){
+            mPresenter.getCachedTranslation().setIsMarked(historyRecord.getTranslation().isMarked());
+        }
     }
 
     @Override

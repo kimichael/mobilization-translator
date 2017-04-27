@@ -11,6 +11,7 @@ import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.buttons.BookmarkButton;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -68,6 +69,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_record, parent, false);
         HistoryAdapter.ViewHolder holder = new HistoryAdapter.ViewHolder(v);
+        holder.bookmarkButton.setOnClickListener(view -> {
+            HistoryRecord historyRecord = mItems.get(holder.getAdapterPosition());
+            historyRecord.getTranslation().switchMarked();
+            mListener.onBookmarkButtonClick(historyRecord);
+            notifyItemChanged(holder.getAdapterPosition());
+        });
         return holder;
     }
 
@@ -78,12 +85,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.destWord.setText(record.getTranslation().getTranslatedWord());
         holder.languageDirection.setText(record.getLanguageDirection().toString());
         holder.bookmarkButton.setMarked(record.getTranslation().isMarked());
-        holder.bookmarkButton.setOnClickListener(v -> {
-                HistoryRecord historyRecord = mItems.get(holder.getAdapterPosition());
-                historyRecord.getTranslation().switchMarked();
-                mListener.onBookmarkButtonClick(historyRecord);
-                notifyItemChanged(holder.getAdapterPosition());
-        });
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

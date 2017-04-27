@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
-import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
 /**
@@ -55,5 +54,6 @@ public interface TranslateContract {
         void bookmarkTranslation(HistoryRecord historyRecord);
 
         void clearHistory();
+        Translation getCachedTranslation();
     }
 }

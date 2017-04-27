@@ -62,8 +62,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
 
     @Override
     public void loadTranslation() {
-
-        if (mTranslateView != null) {
+        if (isAttached()) {
                 mTranslateView.setProgressSpinner(true);
             if (mCachedTranslation != null && mCachedTranslation.getSrcWord().equals(mTranslateView.getRequestedText())) {
                 Timber.d("Found cached translation");
@@ -77,7 +76,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                         @Override
                         public void onTranslationLoaded(Translation translation) {
                             mCachedTranslation = translation;
-                            if (mTranslateView != null) {
+                            if (isAttached()) {
                                 mTranslateView.setProgressSpinner(false);
                                 mTranslateView.showTranslation(translation);
                             }
@@ -86,7 +85,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                         @Override
                         public void onLoadError() {
                             Timber.d("Error loading");
-                            if (mTranslateView != null) {
+                            if (isAttached()) {
                                 mTranslateView.setProgressSpinner(false);
                                 mTranslateView.updateEmptyView();
                             }
@@ -100,9 +99,11 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         Language temp = mSrcLanguage;
         mSrcLanguage = mDestLanguage;
         mDestLanguage = temp;
-        mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
-        mLanguageDirection.swapLanguages();
-        mTranslateView.clearTranslation();
+        if (isAttached()) {
+            mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
+            mLanguageDirection.swapLanguages();
+            mTranslateView.clearTranslation();
+        }
         clearCache();
         loadTranslation();
     }
@@ -148,7 +149,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     private void updateViewLanguages() {
-        if (mTranslateView != null)
+        if (isAttached())
             mTranslateView.setLanguages(mSrcLanguage.getName(), mDestLanguage.getName());
     }
 
@@ -159,9 +160,18 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     @Override
+    public Translation getCachedTranslation() {
+        return mCachedTranslation;
+    }
+
+    @Override
     public void bookmarkTranslation(HistoryRecord historyRecord) {
         if (historyRecord.getLanguageDirection() == null)
             historyRecord.setLanguageDirection(mLanguageDirection);
         mTranslationRepository.bookmarkTranslation(historyRecord);
+    }
+
+    private boolean isAttached() {
+        return mTranslateView != null;
     }
 }

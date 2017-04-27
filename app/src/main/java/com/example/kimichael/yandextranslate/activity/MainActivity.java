@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener,
         FragmentSwitcher {
 
-
-
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({FRAGMENT_STATUS_TRANSLATE, FRAGMENT_STATUS_BOOKMARKS, FRAGMENT_STATUS_SETTINGS})
     public @interface ChosenFragmentStatus {}
