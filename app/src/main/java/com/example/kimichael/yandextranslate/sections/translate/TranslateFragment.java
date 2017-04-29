@@ -192,6 +192,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         } else {
             mClearButton.setVisibility(VISIBLE);
             if (mAttached) {
+                // Set up timer, so we don't translate immediately after typing
                 mTimer.cancel();
                 mTimer = new Timer();
                 long DELAY = 400;
@@ -199,7 +200,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                         new TimerTask() {
                             @Override
                             public void run() {
-                                getActivity().runOnUiThread(() -> mPresenter.loadTranslation());
+                                if (getActivity() != null)
+                                    getActivity().runOnUiThread(() -> mPresenter.loadTranslation());
                             }
                         }, DELAY);
             }
