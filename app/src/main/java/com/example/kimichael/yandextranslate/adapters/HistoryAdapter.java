@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.buttons.BookmarkButton;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.sections.translate.TranslateContract;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,11 +36,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         void onBookmarkButtonClick(HistoryRecord historyRecord);
     }
 
-    public interface OnItemClickListener {
-        void onItemClickListener(HistoryRecord historyRecord);
-    }
-
-    public HistoryAdapter(List<HistoryRecord> items, OnHistoryRecordItemClickListener listener, Context context) {
+    public HistoryAdapter(List<HistoryRecord> items,
+                          OnHistoryRecordItemClickListener listener) {
         this.mItems = items;
         this.mListener = listener;
     }

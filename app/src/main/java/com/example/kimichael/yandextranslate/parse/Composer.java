@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Helper class to compose JSON of our objects
  */
 public class Composer {
 

@@ -82,7 +82,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
         mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this, getContext());
+        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this);
 
         RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
         historyList.setAdapter(mHistoryAdapter);
@@ -104,7 +104,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     @Override
     public void onBookmarkButtonClick(HistoryRecord historyRecord) {
         mPresenter.bookmarkTranslation(historyRecord);
-        if (mPresenter.getCachedTranslation().equals(historyRecord.getTranslation())){
+        if (mPresenter.getCachedTranslation() != null &&
+                mPresenter.getCachedTranslation().equals(historyRecord.getTranslation())){
             mPresenter.getCachedTranslation().setIsMarked(historyRecord.getTranslation().isMarked());
         }
     }

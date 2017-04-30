@@ -1,7 +1,11 @@
 package com.example.kimichael.yandextranslate.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 
 import java.util.List;
@@ -11,26 +15,29 @@ import java.util.List;
  */
 public class BookmarksAdapter extends HistoryAdapter {
 
-    public BookmarksAdapter(List<HistoryRecord> items, OnHistoryRecordItemClickListener listener, Context context) {
-        super(items, listener, context);
+    public BookmarksAdapter(List<HistoryRecord> items, OnHistoryRecordItemClickListener listener) {
+        super(items, listener);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        HistoryRecord record = mItems.get(position);
-        holder.srcWord.setText(record.getTranslation().getSrcWord());
-        holder.destWord.setText(record.getTranslation().getTranslatedWord());
-        holder.languageDirection.setText(record.getLanguageDirection().toString());
-        holder.bookmarkButton.setMarked(record.getTranslation().isMarked());
-        holder.bookmarkButton.setOnClickListener(v -> {
-            HistoryRecord historyRecord = mItems.get(holder.getAdapterPosition());
-            historyRecord.getTranslation().switchMarked();
-            mListener.onBookmarkButtonClick(historyRecord);
-            if (!historyRecord.getTranslation().isMarked())
-                remove(historyRecord);
-            else {
-                notifyItemChanged(holder.getAdapterPosition());
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_record, parent, false);
+        HistoryAdapter.ViewHolder holder = new HistoryAdapter.ViewHolder(v);
+        holder.bookmarkButton.setOnClickListener(view -> {
+            int position = holder.getAdapterPosition();
+            if (position != -1) {
+                HistoryRecord historyRecord = mItems.get(position);
+                historyRecord.getTranslation().switchMarked();
+                mListener.onBookmarkButtonClick(historyRecord);
+                if (!historyRecord.getTranslation().isMarked())
+                    remove(historyRecord);
+                else {
+                    notifyItemChanged(holder.getAdapterPosition());
+                }
             }
         });
+        return holder;
     }
+
+
 }

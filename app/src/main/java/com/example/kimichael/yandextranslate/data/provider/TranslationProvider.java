@@ -14,6 +14,7 @@ import timber.log.Timber;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Provider for translations
  */
 public class TranslationProvider extends ContentProvider {
 

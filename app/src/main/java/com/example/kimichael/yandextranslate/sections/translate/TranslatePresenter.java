@@ -61,7 +61,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     }
 
     @Override
-    public void loadTranslation() {
+    public void startLoadingTranslation() {
         if (isAttached()) {
                 mTranslateView.setProgressSpinner(true);
             if (mCachedTranslation != null && mCachedTranslation.getSrcWord().equals(mTranslateView.getRequestedText())) {
@@ -105,7 +105,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
             mTranslateView.clearTranslation();
         }
         clearCache();
-        loadTranslation();
+        startLoadingTranslation();
     }
 
     @Override

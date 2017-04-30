@@ -25,12 +25,25 @@ public interface NetworkTranslationSource {
     int YANDEX_DICTIONARY_API = 1;
 
 
+    /**
+     * Get translation from network
+     * with given text, language direction and API to be used
+     * @return A single observable, that emits requested translation
+     */
     Single<Translation> getTranslation(String requestedText,
                           LanguageDirection direction,
                           @TranslationApi int translationApi);
 
+    /**
+     * Get languages with their names from network
+     * @return A single obserable, that emits list of languages
+     */
     Single<List<Language>> retrieveLanguages();
 
+    /**
+     * Get language directions, supported by Yandex.Dictionary
+     * @return A single observable, that emits list of supported language directions
+     */
     Single<List<LanguageDirection>> retrieveLanguageDirections();
 
 }

@@ -49,7 +49,7 @@ public class BookmarksFragment extends HistoryFragment {
         unbinder = ButterKnife.bind(this, rootView);
 
         mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this, getContext());
+        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this);
 
         RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
         historyList.setAdapter(mHistoryAdapter);
