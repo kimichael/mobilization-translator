@@ -201,7 +201,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
                             @Override
                             public void run() {
                                 if (getActivity() != null)
-                                    getActivity().runOnUiThread(() -> mPresenter.loadTranslation());
+                                    getActivity().runOnUiThread(() -> mPresenter.startLoadingTranslation());
                             }
                         }, DELAY);
             }
@@ -212,7 +212,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 //    public void onTextChanged(Editable s) {
 //        clearTranslation();
 //        if (!s.toString().equals(""))
-//            mPresenter.loadTranslation();
+//            mPresenter.startLoadingTranslation();
 //    }
 
     @OnClick(R.id.retry_button)
@@ -292,7 +292,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @OnFocusChange(R.id.translated_word_edit_text)
     public void onEditTextFocusChange(boolean hasFocus) {
         if (!hasFocus) {
-            commitTranslateAction();
             mPresenter.saveTranslationToHistory(shownTranslation);
         }
     }
@@ -303,7 +302,7 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         // If anything is written in the editText box
         if (mInputEditText.getText().length() > 0) {
             // Start translating
-            mPresenter.loadTranslation();
+            mPresenter.startLoadingTranslation();
         }
     }
 

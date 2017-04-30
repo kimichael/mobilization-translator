@@ -10,6 +10,7 @@ import timber.log.Timber;
 
 /**
  * Created by Kim Michael on 22.04.17
+ * Helper button, that helps us bookmark a translation
  */
 public class BookmarkButton extends ImageButton {
 

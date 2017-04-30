@@ -13,6 +13,7 @@ import com.example.kimichael.yandextranslate.data.provider.TranslationContract.W
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * DB helper for database that keeps history, bookmarks and languages
  */
 public class TranslationDbHelper extends SQLiteOpenHelper {
 

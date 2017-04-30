@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.example.kimichael.yandextranslate.FragmentSwitcher;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.sections.history.StorageFragment;
@@ -32,8 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Kim Michael on 31.03.17
  */
 public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener,
-        FragmentSwitcher {
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({FRAGMENT_STATUS_TRANSLATE, FRAGMENT_STATUS_BOOKMARKS, FRAGMENT_STATUS_SETTINGS})
@@ -124,11 +122,6 @@ public class MainActivity extends AppCompatActivity
         }
         transaction.commit();
         return true;
-    }
-
-    @Override
-    public void switchFragment(@ChosenFragmentStatus int fragment) {
-        resetFragmentState(fragment);
     }
 
     @Override

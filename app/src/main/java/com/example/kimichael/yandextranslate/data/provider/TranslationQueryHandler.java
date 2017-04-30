@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Query handler asynchronously asks provider for data
  */
 public class TranslationQueryHandler extends AsyncQueryHandler {
     private WeakReference<AsyncQueryListener> mTranslationListener;

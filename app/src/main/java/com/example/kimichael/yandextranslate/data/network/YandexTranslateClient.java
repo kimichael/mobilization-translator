@@ -12,6 +12,7 @@ import retrofit2.http.Query;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Yandex.Translate API interface used by Retrofit
  */
 public interface YandexTranslateClient {
 

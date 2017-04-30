@@ -11,6 +11,7 @@ import timber.log.Timber;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Helper class to help us parse JSON
  */
 public class Parser {
 

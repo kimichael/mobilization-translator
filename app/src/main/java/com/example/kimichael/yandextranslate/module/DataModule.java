@@ -42,6 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Class, used by Dagger to deliver classes
  */
 @Module
 public class DataModule {

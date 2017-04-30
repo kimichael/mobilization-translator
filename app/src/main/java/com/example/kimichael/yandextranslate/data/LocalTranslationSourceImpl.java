@@ -108,9 +108,9 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
     }
 
     @Override
-    public void saveLanguageDirections(List<LanguageDirection> languageDirections) {
+    public void saveLanguageDirections(List<LanguageDirection> supportedLanguageDirections) {
         int i = 0;
-        for (LanguageDirection languageDirection : languageDirections) {
+        for (LanguageDirection languageDirection : supportedLanguageDirections) {
             mQueryHandler.startInsert(i++, null,
                     TranslationContract.LanguageDirectionEntry.CONTENT_URI,
                     languageDirection.toContentValues());
