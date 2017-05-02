@@ -87,10 +87,6 @@ public class TranslationDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + WordEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DefinitionEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + LanguageDirectionEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + LanguageEntry.TABLE_NAME);
         onCreate(db);
     }
 }

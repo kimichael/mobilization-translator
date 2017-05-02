@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 /**
  * Created by Kim Michael on 24.04.17
+ * @see TranslateFragment
  */
 @RunWith(MockitoJUnitRunner.class)
 @MediumTest

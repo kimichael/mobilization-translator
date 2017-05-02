@@ -1,8 +1,11 @@
 package com.example.kimichael.yandextranslate.adapters;
 
-import android.content.Context;
+import android.support.transition.TransitionManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.sections.translate.TranslateContract;
 
 import java.util.List;
 
@@ -11,8 +14,11 @@ import java.util.List;
  */
 public class BookmarksAdapter extends HistoryAdapter {
 
-    public BookmarksAdapter(List<HistoryRecord> items, OnHistoryRecordItemClickListener listener, Context context) {
-        super(items, listener, context);
+    public BookmarksAdapter(List<HistoryRecord> items,
+                            OnHistoryRecordItemClickListener listener,
+                            RecyclerView recyclerView,
+                            TranslateContract.UserActionsListener presenter) {
+        super(items, listener, recyclerView, presenter);
     }
 
     @Override
@@ -22,15 +28,14 @@ public class BookmarksAdapter extends HistoryAdapter {
         holder.destWord.setText(record.getTranslation().getTranslatedWord());
         holder.languageDirection.setText(record.getLanguageDirection().toString());
         holder.bookmarkButton.setMarked(record.getTranslation().isMarked());
-        holder.bookmarkButton.setOnClickListener(v -> {
-            HistoryRecord historyRecord = mItems.get(holder.getAdapterPosition());
-            historyRecord.getTranslation().switchMarked();
-            mListener.onBookmarkButtonClick(historyRecord);
-            if (!historyRecord.getTranslation().isMarked())
-                remove(historyRecord);
-            else {
-                notifyItemChanged(holder.getAdapterPosition());
-            }
-        });
+
+//        final boolean isExpanded = position == mExpandedPosition;
+//        holder.detailedTranslation.setVisibility(isExpanded? View.VISIBLE:View.GONE);
+//        holder.itemView.setActivated(isExpanded);
+//        holder.itemView.setOnClickListener(v -> {
+//            mExpandedPosition = isExpanded ? -1:position;
+//            TransitionManager.beginDelayedTransition(mRecyclerView);
+//            notifyDataSetChanged();
+//        });
     }
 }

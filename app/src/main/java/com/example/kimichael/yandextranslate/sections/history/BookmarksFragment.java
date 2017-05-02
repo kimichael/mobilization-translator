@@ -48,10 +48,10 @@ public class BookmarksFragment extends HistoryFragment {
         View rootView = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this, getContext());
-
+        // Set up recycler view
         RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
+        mHistoryRecords = new ArrayList<>();
+        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this, historyList, mPresenter);
         historyList.setAdapter(mHistoryAdapter);
         // Layout items as a list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

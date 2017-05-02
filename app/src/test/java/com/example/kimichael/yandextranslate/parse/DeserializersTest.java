@@ -26,7 +26,6 @@ public class DeserializersTest {
     public void setup() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(Translation.class, new TranslationDeserializer())
-                .registerTypeAdapter(Translation.class, new TranslationDeserializer())
                 .registerTypeAdapter(new TypeToken<List<Language>>(){}.getType(), new LanguagesDeserializer())
                 .create();
     }

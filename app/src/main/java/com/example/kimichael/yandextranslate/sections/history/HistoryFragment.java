@@ -80,12 +80,12 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
-
-        mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this, getContext());
-
+        // Set up recycler view with history records
         RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
+        mHistoryRecords = new ArrayList<>();
+        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this, historyList, mPresenter);
         historyList.setAdapter(mHistoryAdapter);
+
         // Layout items as a list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         historyList.setLayoutManager(linearLayoutManager);
