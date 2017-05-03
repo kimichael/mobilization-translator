@@ -65,8 +65,6 @@ import static android.view.View.VISIBLE;
  */
 public class TranslateFragment extends Fragment implements TranslateContract.View {
 
-    private final String LOG_TAG = TranslateFragment.class.getSimpleName();
-
     @BindView(R.id.text_input_box) RelativeLayout mTextBox;
     @BindView(R.id.translated_word_edit_text) EditText mInputEditText;
     @BindView(R.id.clear_text_button) ImageButton mClearButton;
@@ -81,9 +79,9 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     ToolbarViewHolder mToolbarViewHolder;
     // A special field of ButterKnife to nullify all binded views
     private Unbinder unbinder;
-    private ActivityComponent mActivityComponent;
     private SharedPreferences mSharedPreferences;
     private Translation shownTranslation;
+    private HistoryRecordProvider mHistoryRecordProvider;
     // Timer for delaying translating typed text
     private Timer mTimer = new Timer();
 
@@ -103,7 +101,8 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mActivityComponent = ((ComponentProvider) getActivity().getApplication()).provideComponent();
+        ActivityComponent mActivityComponent =
+                ((ComponentProvider) getActivity().getApplication()).provideComponent();
         mActivityComponent.inject(this);
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
@@ -117,10 +116,14 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         View rootview = inflater.inflate(R.layout.fragment_translate, container, false);
         // Set chooser for translation direction on toolbar
         View toolbarView = inflater.inflate(R.layout.actionbar_translation_chooser, null);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setCustomView(toolbarView);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity)getActivity())
+                .getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity)getActivity())
+                .getSupportActionBar().setCustomView(toolbarView);
+        ((AppCompatActivity)getActivity())
+                .getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity)getActivity())
+                .getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mToolbarViewHolder = new ToolbarViewHolder(toolbarView);
 
         unbinder = ButterKnife.bind(this, rootview);
@@ -143,23 +146,28 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         super.onResume();
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         mAttached = true;
-        mPresenter.onAttachView(this,
-                new Language(
-                        mSharedPreferences.getString(getString(R.string.pref_src_language),
-                                getString(R.string.default_src_language)),
-                        mSharedPreferences.getString(getString(R.string.pref_src_language_code),
-                                getString(R.string.default_src_language_code))),
-                new Language(
-                        mSharedPreferences.getString(getString(R.string.pref_dest_language),
-                                getString(R.string.default_dest_language)),
-                        mSharedPreferences.getString(getString(R.string.pref_dest_language_code),
-                                getString(R.string.default_dest_language_code))));
+        Language srcLanguage = new Language(
+                mSharedPreferences.getString(getString(R.string.pref_src_language),
+                        getString(R.string.default_src_language)),
+                mSharedPreferences.getString(getString(R.string.pref_src_language_code),
+                        getString(R.string.default_src_language_code)));
+        Language destLanguage = new Language(
+                mSharedPreferences.getString(getString(R.string.pref_dest_language),
+                        getString(R.string.default_dest_language)),
+                mSharedPreferences.getString(getString(R.string.pref_dest_language_code),
+                        getString(R.string.default_dest_language_code)));
+        mPresenter.onAttachView(this,srcLanguage,destLanguage);
         mInputEditText.setText(mSharedPreferences.getString(getString(R.string.key_input_text), ""));
-        commitTranslateAction();
+        HistoryRecord historyRecord = mHistoryRecordProvider.getHistoryRecord();
+        if (historyRecord != null)
+            mPresenter.showHistoryRecord(historyRecord);
+        else
+            commitTranslateAction();
     }
 
     @Override
     public void onAttach(Context context) {
+        mHistoryRecordProvider = (HistoryRecordProvider) context;
         super.onAttach(context);
     }
 
@@ -207,13 +215,6 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
             }
         }
     }
-
-//    @OnTextChanged(R.id.translated_word_edit_text)
-//    public void onTextChanged(Editable s) {
-//        clearTranslation();
-//        if (!s.toString().equals(""))
-//            mPresenter.startLoadingTranslation();
-//    }
 
     @OnClick(R.id.retry_button)
     public void retryConnection() {
@@ -392,5 +393,9 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
     @NonNull
     public IdlingResource getIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    public interface HistoryRecordProvider {
+        HistoryRecord getHistoryRecord();
     }
 }

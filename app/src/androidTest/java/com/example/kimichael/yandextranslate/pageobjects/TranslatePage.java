@@ -1,8 +1,5 @@
 package com.example.kimichael.yandextranslate.pageobjects;
 
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.action.ViewActions;
-
 import com.example.kimichael.yandextranslate.R;
 
 import static android.support.test.espresso.Espresso.*;

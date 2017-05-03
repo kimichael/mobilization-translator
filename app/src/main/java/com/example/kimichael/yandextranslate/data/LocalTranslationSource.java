@@ -57,4 +57,12 @@ public interface LocalTranslationSource {
      * Clear the whole history from internal memory
      */
     void clearHistory();
+    /**
+     * Gets all languages with their corresponding names
+     */
+    Single<List<Language>> retrieveLanguages();
+    /**
+     * Gets all language directions
+     */
+    Single<List<LanguageDirection>> retrieveLanguageDirections();
 }

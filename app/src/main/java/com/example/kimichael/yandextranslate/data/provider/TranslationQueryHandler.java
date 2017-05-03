@@ -10,6 +10,7 @@ import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.example.kimichael.yandextranslate.parse.Composer;
+import com.example.kimichael.yandextranslate.sections.translate.TranslateContract;
 
 import java.lang.ref.WeakReference;
 
@@ -21,12 +22,16 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
     private WeakReference<AsyncQueryListener> mTranslationListener;
     private WeakReference<AsyncQueryListener> mIsDictSupportedListener;
     private WeakReference<AsyncQueryListener> mDefinitionsListener;
+    private WeakReference<AsyncQueryListener> mLanguagesListener;
+    private WeakReference<AsyncQueryListener> mLanguageDirectionsListener;
     Composer mComposer;
 
     private static final int TRANSLATION_TOKEN = 0;
     private static final int IS_DICT_SUPPORTED_TOKEN = 1;
     private static final int DEFINITIONS_TOKEN = 2;
     private static final int CLEAR_HISTORY_TOKEN = 3;
+    private static final int LANGUAGES_TOKEN = 4;
+    private static final int LANGUAGE_DIRECTIONS_TOKEN = 5;
 
     private static final String[] languageDirectionProjection = new String[] {
             TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE,
@@ -40,6 +45,12 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
             TranslationContract.WordEntry.COLUMN_BOOKMARK
     };
 
+    private static final String[] languageDirectionsProjection = new String[] {
+            TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE,
+            TranslationContract.LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE,
+            TranslationContract.LanguageDirectionEntry.COLUMN_API_DICT_AVAILABLE
+    };
+
     private static final String[] definitionProjection = new String[] {
             TranslationContract.DefinitionEntry.COLUMN_TEXT,
             TranslationContract.DefinitionEntry.COLUMN_SRC_LANG,
@@ -50,6 +61,11 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
             TranslationContract.DefinitionEntry.COLUMN_JSON_CHILDREN,
             TranslationContract.DefinitionEntry.COLUMN_PART_OF_SPEECH,
             TranslationContract.DefinitionEntry.COLUMN_WORD_KEY
+    };
+
+    private static final String[] languagesProjection = new String[] {
+            TranslationContract.LanguageEntry.COLUMN_LANGUAGE_KEY,
+            TranslationContract.LanguageEntry.COLUMN_LANGUAGE_NAME
     };
 
     public interface AsyncQueryListener {
@@ -73,6 +89,14 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
         mDefinitionsListener = new WeakReference<>(listener);
     }
 
+    public void setLanguagesListener(AsyncQueryListener listener) {
+        mLanguagesListener = new WeakReference<>(listener);
+    }
+
+    public void setLanguageDirectionsListener(AsyncQueryListener listener) {
+        mLanguageDirectionsListener = new WeakReference<>(listener);
+    }
+
     @Override
     protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
         final AsyncQueryListener listener;
@@ -85,6 +109,12 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
                 break;
             case DEFINITIONS_TOKEN:
                 listener = mDefinitionsListener.get();
+                break;
+            case LANGUAGES_TOKEN:
+                listener = mLanguagesListener.get();
+                break;
+            case LANGUAGE_DIRECTIONS_TOKEN:
+                listener = mLanguageDirectionsListener.get();
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported token: " + token);
@@ -133,7 +163,9 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
         startQuery(DEFINITIONS_TOKEN, null,
                 TranslationContract.DefinitionEntry.buildDefinitionWithWordAndLangDirection(
                         requestedText, languageDirection.getSrcLangCode(), languageDirection.getDestLangCode()),
-                definitionProjection, null, null, TranslationContract.DefinitionEntry.COLUMN_ORDER + " ASC");
+                definitionProjection, null, null,
+                // Definitions come ordered from network
+                TranslationContract.DefinitionEntry.COLUMN_ORDER + " ASC");
     }
 
     public void startBookmarkUpdate(HistoryRecord historyRecord) {
@@ -143,6 +175,17 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
                 historyRecord.getTranslation().getSrcWord(), historyRecord.getLanguageDirection().getSrcLangCode(),
                 historyRecord.getLanguageDirection().getDestLangCode()), contentValues, null, null);
     }
+
+    public void startLanguagesQuery() {
+        startQuery(LANGUAGES_TOKEN, null, TranslationContract.LanguageEntry.CONTENT_URI,
+                languagesProjection, null, null, TranslationContract.LanguageEntry.COLUMN_LANGUAGE_NAME + "DESC");
+    }
+
+    public void startLanguageDirectionsQuery() {
+        startQuery(LANGUAGE_DIRECTIONS_TOKEN, null, TranslationContract.LanguageDirectionEntry.CONTENT_URI,
+                languageDirectionsProjection, null, null, null);
+    }
+
 
     public void clearHistory() {
         startDelete(CLEAR_HISTORY_TOKEN, null, TranslationContract.WordEntry.buildClearAllUri(), null, null);

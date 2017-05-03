@@ -3,38 +3,35 @@ package com.example.kimichael.yandextranslate.data;
 import android.support.annotation.NonNull;
 
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
+
+import java.util.List;
+
+import io.reactivex.Single;
 
 /**
  * Created by Kim Michael on 31.03.17.
  * Repository, which works with network and internal memory to deliver translations to us.
  */
 public interface TranslationRepository {
-
-    interface LoadTranslationCallback {
-        void onTranslationLoaded(Translation translation);
-        void onLoadError();
-    }
-
     /**
      * Get translation
      * @param requestedText word, which we need translation to
      * @param languageDirection direction, in which we need our translation
-     * @param callback callback which will then get the translation
      */
-    void getTranslation(String requestedText,
-                                   LanguageDirection languageDirection,
-                                   @NonNull LoadTranslationCallback callback);
+    Single<Translation> getTranslation(String requestedText,
+                                   LanguageDirection languageDirection);
 
     /**
      * Get all supported languages
      */
-    void retrieveLanguages();
+    Single<List<Language>> retrieveLanguages();
     /**
      * Get language directions, supported by Yandex.Dictionary
      */
-    void retrieveLanguageDirections();
+    Single<List<LanguageDirection>> retrieveLanguageDirections();
 
     /**
      * Save translation to history

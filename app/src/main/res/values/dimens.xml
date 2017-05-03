@@ -15,5 +15,4 @@
     <dimen name="button_big_margin">8dp</dimen>
 
     <dimen name="language_direction_margin">8dp</dimen>
-    <dimen name="z_selected_history_record">1dp</dimen>
 </resources>

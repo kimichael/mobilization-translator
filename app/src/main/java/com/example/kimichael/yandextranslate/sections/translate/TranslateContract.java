@@ -68,6 +68,10 @@ public interface TranslateContract {
         */
         void startLoadingTranslation();
         /**
+         * Show given history record for user
+         */
+        void showHistoryRecord(HistoryRecord historyRecord);
+        /**
          * Swap source and destination languages
          */
         void swapLanguages();

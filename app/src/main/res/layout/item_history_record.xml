@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?android:listPreferredItemHeight"
-    android:background="@drawable/history_record_background"
-    android:stateListAnimator="@animator/history_record_selection"
     >
 
     <LinearLayout
@@ -60,13 +58,6 @@
                 android:textSize="10sp"/>
 
         </LinearLayout>
-
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:id="@+id/detailed_translation"
-            android:text="Lorem\nIpsum"/>
-
 
     </LinearLayout>
 </FrameLayout>

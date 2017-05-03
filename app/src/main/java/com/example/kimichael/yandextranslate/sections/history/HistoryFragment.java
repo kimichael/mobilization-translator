@@ -1,9 +1,9 @@
 package com.example.kimichael.yandextranslate.sections.history;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -34,7 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
@@ -60,6 +58,8 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     Unbinder unbinder;
     List<HistoryRecord> mHistoryRecords;
     HistoryAdapter mHistoryAdapter;
+    RecyclerView mHistoryRecyclerView;
+    FragmentSwitcher mFragmentSwitcher;
 
     ActivityComponent mActivityComponent;
     @Inject TranslateContract.UserActionsListener mPresenter;
@@ -81,18 +81,19 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         // Set up recycler view with history records
-        RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
+        mHistoryRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_list);
         mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this, historyList, mPresenter);
-        historyList.setAdapter(mHistoryAdapter);
+        mHistoryAdapter = new HistoryAdapter(mHistoryRecords, this, mHistoryRecyclerView, mPresenter,
+                mFragmentSwitcher);
+        mHistoryRecyclerView.setAdapter(mHistoryAdapter);
 
         // Layout items as a list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        historyList.setLayoutManager(linearLayoutManager);
+        mHistoryRecyclerView.setLayoutManager(linearLayoutManager);
         // Set line as divider
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(historyList.getContext(),
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mHistoryRecyclerView.getContext(),
                 linearLayoutManager.getOrientation());
-        historyList.addItemDecoration(dividerItemDecoration);
+        mHistoryRecyclerView.addItemDecoration(dividerItemDecoration);
         unbinder = ButterKnife.bind(this, rootView);
         // Load languages to recyclerView
         getLoaderManager().initLoader(HISTORY_LOADER, null, this);
@@ -126,8 +127,13 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
     }
 
     @Override
+    public void onAttach(Context context) {
+        mFragmentSwitcher = ((FragmentSwitcher)context);
+        super.onAttach(context);
+    }
+
+    @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        HistoryRecord historyRecord;
         Translation translation;
         LanguageDirection languageDirection;
         if (data != null) {
@@ -140,12 +146,11 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
                         data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_SRC_LANG)),
                         data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_DEST_LANG))
                 );
-                historyRecord = new HistoryRecord(translation, languageDirection);
-                mHistoryAdapter.update(0, historyRecord);
+                mHistoryAdapter.update(0, new HistoryRecord(translation, languageDirection));
             }
+            if (data.getCount() == 0)
+                mHistoryAdapter.removeAll();
         }
-        if (data.getCount() == 0)
-            mHistoryAdapter.removeAll();
         updateEmptyView();
         mLoadingSpinner.setVisibility(GONE);
     }
@@ -166,5 +171,12 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnHistor
         if (unbinder != null)
             unbinder.unbind();
         super.onDestroyView();
+    }
+
+    /**
+     * Used to show translation on clicking on item in list
+     */
+    public interface FragmentSwitcher {
+        void translate(HistoryRecord historyRecord);
     }
 }

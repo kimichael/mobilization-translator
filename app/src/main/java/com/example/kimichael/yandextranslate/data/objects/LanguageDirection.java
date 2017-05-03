@@ -1,6 +1,7 @@
 package com.example.kimichael.yandextranslate.data.objects;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
@@ -75,5 +76,12 @@ public class LanguageDirection {
         String temp = srcLangCode;
         srcLangCode = destLangCode;
         destLangCode = temp;
+    }
+
+    public static LanguageDirection from(Cursor cursor) {
+        return new LanguageDirection(
+                cursor.getString(cursor.getColumnIndex(TranslationContract.LanguageDirectionEntry.COLUMN_SRC_LANGUAGE_CODE)),
+                cursor.getString(cursor.getColumnIndex(TranslationContract.LanguageDirectionEntry.COLUMN_DEST_LANGUAGE_CODE))
+        );
     }
 }

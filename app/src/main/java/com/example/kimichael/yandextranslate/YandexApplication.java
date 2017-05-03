@@ -12,6 +12,7 @@ import timber.log.Timber;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Application
  */
 public class YandexApplication extends Application implements ComponentProvider {
 

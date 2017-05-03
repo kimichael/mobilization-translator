@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * All network calls are here
  */
 public class NetworkTranslationSourceImpl implements NetworkTranslationSource {
 

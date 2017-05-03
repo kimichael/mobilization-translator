@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.adapters.BookmarksAdapter;
-import com.example.kimichael.yandextranslate.adapters.HistoryAdapter;
+import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
+import com.example.kimichael.yandextranslate.data.objects.Translation;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class BookmarksFragment extends HistoryFragment {
         // Set up recycler view
         RecyclerView historyList = (RecyclerView) rootView.findViewById(R.id.history_list);
         mHistoryRecords = new ArrayList<>();
-        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this, historyList, mPresenter);
+        mHistoryAdapter = new BookmarksAdapter(mHistoryRecords, this, historyList, mPresenter, mFragmentSwitcher);
         historyList.setAdapter(mHistoryAdapter);
         // Layout items as a list
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -83,5 +85,37 @@ public class BookmarksFragment extends HistoryFragment {
                 selectionArgs,
                 sortOrder
         );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Translation translation;
+        LanguageDirection languageDirection;
+        if (data != null) {
+            int i = 0;
+            while (data.moveToNext()) {
+                translation = new Translation(
+                        data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_SRC_WORD)),
+                        data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_DEST_WORD)));
+                translation.setIsMarked(data.getInt(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_BOOKMARK)) > 0);
+                languageDirection = new LanguageDirection(
+                        data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_SRC_LANG)),
+                        data.getString(data.getColumnIndex(TranslationContract.WordEntry.COLUMN_DEST_LANG))
+                );
+                mHistoryAdapter.update(i++, new HistoryRecord(translation, languageDirection));
+            }
+        }
+        if (data.getCount() == 0)
+            mHistoryAdapter.removeAll();
+        updateEmptyView();
+        mLoadingSpinner.setVisibility(GONE);
+    }
+
+    private void updateEmptyView() {
+        if (mHistoryAdapter.getItemCount() == 0) {
+            mNoHistoryBlock.setVisibility(View.VISIBLE);
+        } else {
+            mNoHistoryBlock.setVisibility(GONE);
+        }
     }
 }

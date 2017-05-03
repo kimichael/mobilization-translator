@@ -1,7 +1,5 @@
 package com.example.kimichael.yandextranslate.data;
 
-import android.support.annotation.NonNull;
-
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
@@ -17,7 +15,6 @@ import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -41,76 +38,74 @@ public class TranslationRepositoryImpl implements TranslationRepository {
 
 
     @Override
-    public void getTranslation(final String requestedText,
-                                          final LanguageDirection languageDirection,
-                                          @NonNull final LoadTranslationCallback callback) {
+    public Single<Translation> getTranslation(final String requestedText,
+                                          final LanguageDirection languageDirection) {
         pendingWord = requestedText;
-        Single<Translation> translationSingle = mLocalTranslationSource.isDictSupported(languageDirection).flatMap(new Function<Boolean, SingleSource<Translation>>() {
+        Single<Translation> translationObs = mLocalTranslationSource
+                .isDictSupported(languageDirection)
+                .flatMap(new Function<Boolean, SingleSource<Translation>>() {
             @Override
             public SingleSource<Translation> apply(Boolean aBoolean) throws Exception {
                 @NetworkTranslationSource.TranslationApi int api = aBoolean ?
                         NetworkTranslationSource.YANDEX_DICTIONARY_API :
                         NetworkTranslationSource.YANDEX_TRANSLATE_API;
+                // First try looking in database
                 return mLocalTranslationSource.getTranslation(requestedText, languageDirection, api)
                         .timeout(5L, TimeUnit.SECONDS)
                         // If we cannot find the translation on our device, we go to network
                         .onErrorResumeNext((Throwable throwable) -> {
                             Timber.d("Call to network");
-                            return mNetworkTranslationSource.getTranslation(requestedText, languageDirection, api);
+                            return mNetworkTranslationSource
+                                    .getTranslation(requestedText, languageDirection, api);
                             // If we cannot find the translation on dictionary, we look in Yandex.Translate
                         }).onErrorResumeNext(throwable -> {
-                            return mNetworkTranslationSource.getTranslation(requestedText, languageDirection, NetworkTranslationSource.YANDEX_TRANSLATE_API);
+                            return mNetworkTranslationSource
+                                    .getTranslation(requestedText, languageDirection,
+                                            NetworkTranslationSource.YANDEX_TRANSLATE_API);
+                        }).doOnSuccess(translation -> {
+                            // Assert that downloaded word is what we want
+                            if (requestedText.equals(pendingWord)) {
+                                translation.setSrcWord(requestedText.toLowerCase());
+                            }
                         });
             }
         });
-        translationSingle.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Translation>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Timber.d("Subscribed on getting translation");
-                    }
-
-                    @Override
-                    public void onSuccess(Translation translation) {
-                        // Assert that downloaded word is what we want
-                        if (requestedText.equals(pendingWord)) {
-                            translation.setSrcWord(requestedText.toLowerCase());
-                            callback.onTranslationLoaded(translation);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        callback.onLoadError();
-                    }
-                });
+        return translationObs;
     }
 
     @Override
-    public void retrieveLanguages() {
-        mNetworkTranslationSource.retrieveLanguages()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Language>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Timber.d("Subscribed on getting language list");
-                    }
-                    @Override
-                    public void onSuccess(List<Language> languages) {
-                        mLocalTranslationSource.saveLanguages(languages);
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.d("Cannot retrieve languages");
-                    }
-                });
+    public Single<List<Language>> retrieveLanguages() {
+        Single<List<Language>> languagesObs = mNetworkTranslationSource.retrieveLanguages()
+                .onErrorResumeNext(mLocalTranslationSource.retrieveLanguages());
+
+        languagesObs
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<List<Language>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    Timber.d("Subscribed on getting language list");
+                }
+                @Override
+                public void onSuccess(List<Language> languages) {
+                    mLocalTranslationSource.saveLanguages(languages);
+                }
+                @Override
+                public void onError(Throwable e) {
+                    Timber.d("Cannot retrieve languages");
+                }
+            });
+
+        return languagesObs;
     }
 
     @Override
-    public void retrieveLanguageDirections() {
-        mNetworkTranslationSource.retrieveLanguageDirections()
+    public Single<List<LanguageDirection>> retrieveLanguageDirections() {
+        Single<List<LanguageDirection>> languageDirectionsObs =
+                mLocalTranslationSource.retrieveLanguageDirections()
+                .onErrorResumeNext(mNetworkTranslationSource.retrieveLanguageDirections());
+
+        languageDirectionsObs
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<LanguageDirection>>() {
@@ -129,6 +124,8 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         Timber.d("Cannot retrieve language directions");
                     }
                 });
+
+        return languageDirectionsObs;
     }
 
     @Override

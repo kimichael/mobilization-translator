@@ -1,6 +1,7 @@
 package com.example.kimichael.yandextranslate.data.objects;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -78,5 +79,12 @@ public class Language implements Parcelable {
         int result = name.hashCode();
         result = 31 * result + languageCode.hashCode();
         return result;
+    }
+
+    public static Language from(Cursor cursor) {
+        return new Language(
+                cursor.getString(cursor.getColumnIndex(TranslationContract.LanguageEntry.COLUMN_LANGUAGE_KEY)),
+                cursor.getString(cursor.getColumnIndex(TranslationContract.LanguageEntry.COLUMN_LANGUAGE_NAME))
+        );
     }
 }

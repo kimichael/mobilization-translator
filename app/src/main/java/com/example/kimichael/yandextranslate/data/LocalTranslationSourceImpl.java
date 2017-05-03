@@ -23,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Internal storage of the phone itself
  */
 public class LocalTranslationSourceImpl implements LocalTranslationSource {
 
@@ -156,5 +157,49 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
     @Override
     public void clearHistory() {
         mQueryHandler.clearHistory();
+    }
+
+    @Override
+    public Single<List<Language>> retrieveLanguages() {
+        return Single.create(new SingleOnSubscribe<List<Language>>() {
+            @Override
+            public void subscribe(SingleEmitter<List<Language>> e) throws Exception {
+                TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
+                    List<Language> languages = new ArrayList<>();
+                    if (cursor == null || cursor.getCount() == 0) {
+                        e.onSuccess(languages);
+                    } else {
+                        while (cursor.moveToNext()) {
+                            languages.add(Language.from(cursor));
+                        }
+                        e.onSuccess(languages);
+                    }
+                };
+                mQueryHandler.setLanguagesListener(listener);
+                mQueryHandler.startLanguagesQuery();
+            }
+        });
+    }
+
+    @Override
+    public Single<List<LanguageDirection>> retrieveLanguageDirections() {
+        return Single.create(new SingleOnSubscribe<List<LanguageDirection>>() {
+            @Override
+            public void subscribe(SingleEmitter<List<LanguageDirection>> e) throws Exception {
+                TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
+                    List<LanguageDirection> languageDirections = new ArrayList<>();
+                    if (cursor == null || cursor.getCount() == 0) {
+                        e.onSuccess(languageDirections);
+                    } else {
+                        while (cursor.moveToNext()) {
+                            languageDirections.add(LanguageDirection.from(cursor));
+                        }
+                        e.onSuccess(languageDirections);
+                    }
+                };
+                mQueryHandler.setLanguageDirectionsListener(listener);
+                mQueryHandler.startLanguageDirectionsQuery();
+            }
+        });
     }
 }

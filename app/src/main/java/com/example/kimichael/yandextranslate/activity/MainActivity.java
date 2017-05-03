@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
 import com.example.kimichael.yandextranslate.sections.history.StorageFragment;
 import com.example.kimichael.yandextranslate.sections.settings.SettingsFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateFragment;
@@ -31,7 +32,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by Kim Michael on 31.03.17
  */
 public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener,
+        HistoryFragment.FragmentSwitcher, TranslateFragment.HistoryRecordProvider {
+
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({FRAGMENT_STATUS_TRANSLATE, FRAGMENT_STATUS_BOOKMARKS, FRAGMENT_STATUS_SETTINGS})
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     public static final int FRAGMENT_STATUS_SETTINGS = 2;
 
     private @ChosenFragmentStatus int mSelectedFragment;
+    private HistoryRecord mHistoryRecord;
     BottomNavigationView mNavigationView;
 
 
@@ -151,4 +155,24 @@ public class MainActivity extends AppCompatActivity
         }
         return super.dispatchTouchEvent(event);
     }
+
+    @Override
+    public void translate(HistoryRecord historyRecord) {
+        mHistoryRecord = historyRecord;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        TranslateFragment translateFragment = new TranslateFragment();
+        transaction.replace(R.id.container, translateFragment);
+        transaction.commit();
+        mSelectedFragment = FRAGMENT_STATUS_TRANSLATE;
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+    }
+
+    @Override
+    public HistoryRecord getHistoryRecord() {
+        HistoryRecord historyRecord = mHistoryRecord;
+        mHistoryRecord = null;
+        return historyRecord;
+    }
+
 }

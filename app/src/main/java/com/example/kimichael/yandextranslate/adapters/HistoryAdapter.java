@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.buttons.BookmarkButton;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateContract;
 
 import java.util.List;
@@ -23,11 +24,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     List<HistoryRecord> mItems;
     OnHistoryRecordItemClickListener mListener;
     TranslateContract.UserActionsListener mPresenter;
-    int mExpandedPosition = -1;
+    HistoryFragment.FragmentSwitcher fragmentSwitcher;
 
     public void update(int i, HistoryRecord historyRecord) {
         if (mItems.contains(historyRecord)) {
-            mItems.get(mItems.indexOf(historyRecord)).getTranslation().setIsMarked(historyRecord.getTranslation().isMarked());
+            mItems.get(mItems.indexOf(historyRecord))
+                    .getTranslation().setIsMarked(historyRecord.getTranslation().isMarked());
             notifyItemChanged(mItems.indexOf(historyRecord));
         } else {
             insert(i, historyRecord);
@@ -41,11 +43,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public HistoryAdapter(List<HistoryRecord> items,
                           OnHistoryRecordItemClickListener listener,
                           RecyclerView recyclerView,
-                          TranslateContract.UserActionsListener presenter) {
+                          TranslateContract.UserActionsListener presenter,
+                          HistoryFragment.FragmentSwitcher fragmentSwitcher) {
         this.mItems = items;
         this.mListener = listener;
         this.mRecyclerView = recyclerView;
         this.mPresenter = presenter;
+        this.fragmentSwitcher = fragmentSwitcher;
     }
 
     public void insert(int position, HistoryRecord historyRecord) {
@@ -74,10 +78,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_record, parent, false);
         HistoryAdapter.ViewHolder holder = new HistoryAdapter.ViewHolder(v);
         holder.bookmarkButton.setOnClickListener(view -> {
-            HistoryRecord historyRecord = mItems.get(holder.getAdapterPosition());
-            historyRecord.getTranslation().switchMarked();
-            mListener.onBookmarkButtonClick(historyRecord);
-            notifyItemChanged(holder.getAdapterPosition());
+            int position = holder.getAdapterPosition();
+            if (position != -1) {
+                HistoryRecord historyRecord = mItems.get(position);
+                historyRecord.getTranslation().switchMarked();
+                mListener.onBookmarkButtonClick(historyRecord);
+                notifyItemChanged(position);
+            }
         });
         return holder;
     }
@@ -90,15 +97,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.languageDirection.setText(record.getLanguageDirection().toString());
         holder.bookmarkButton.setMarked(record.getTranslation().isMarked());
 
-//        final boolean isExpanded = position == mExpandedPosition;
-//        holder.detailedTranslation.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-//        holder.itemView.setActivated(isExpanded);
-//        holder.itemView.setOnClickListener(v -> {
-//            HistoryAdapter.this.mExpandedPosition = isExpanded ? -1 : position;
-//            TransitionManager.beginDelayedTransition(mRecyclerView);
-//            notifyDataSetChanged();
-//        });
-
+        holder.itemView.setOnClickListener(v -> {
+            fragmentSwitcher.translate(record);
+        });
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -106,7 +107,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         TextView destWord;
         TextView languageDirection;
         BookmarkButton bookmarkButton;
-        TextView detailedTranslation;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -114,7 +114,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             destWord = (TextView) itemView.findViewById(R.id.dest_word);
             languageDirection = (TextView) itemView.findViewById(R.id.language_direction);
             bookmarkButton = (BookmarkButton) itemView.findViewById(R.id.bookmark_button);
-            detailedTranslation = (TextView) itemView.findViewById(R.id.detailed_translation);
         }
 
     }

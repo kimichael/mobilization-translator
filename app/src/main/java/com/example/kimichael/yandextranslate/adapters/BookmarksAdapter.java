@@ -2,9 +2,13 @@ package com.example.kimichael.yandextranslate.adapters;
 
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
+import com.example.kimichael.yandextranslate.sections.history.HistoryFragment;
 import com.example.kimichael.yandextranslate.sections.translate.TranslateContract;
 
 import java.util.List;
@@ -17,8 +21,9 @@ public class BookmarksAdapter extends HistoryAdapter {
     public BookmarksAdapter(List<HistoryRecord> items,
                             OnHistoryRecordItemClickListener listener,
                             RecyclerView recyclerView,
-                            TranslateContract.UserActionsListener presenter) {
-        super(items, listener, recyclerView, presenter);
+                            TranslateContract.UserActionsListener presenter,
+                            HistoryFragment.FragmentSwitcher fragmentSwitcher) {
+        super(items, listener, recyclerView, presenter, fragmentSwitcher);
     }
 
     @Override
@@ -29,13 +34,29 @@ public class BookmarksAdapter extends HistoryAdapter {
         holder.languageDirection.setText(record.getLanguageDirection().toString());
         holder.bookmarkButton.setMarked(record.getTranslation().isMarked());
 
-//        final boolean isExpanded = position == mExpandedPosition;
-//        holder.detailedTranslation.setVisibility(isExpanded? View.VISIBLE:View.GONE);
-//        holder.itemView.setActivated(isExpanded);
-//        holder.itemView.setOnClickListener(v -> {
-//            mExpandedPosition = isExpanded ? -1:position;
-//            TransitionManager.beginDelayedTransition(mRecyclerView);
-//            notifyDataSetChanged();
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            fragmentSwitcher.translate(record);
+        });
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_record, parent, false);
+        HistoryAdapter.ViewHolder holder = new HistoryAdapter.ViewHolder(v);
+        holder.bookmarkButton.setOnClickListener(view -> {
+            int position = holder.getAdapterPosition();
+            if (position != -1) {
+                HistoryRecord historyRecord = mItems.get(position);
+                historyRecord.getTranslation().switchMarked();
+                mListener.onBookmarkButtonClick(historyRecord);
+                if (!historyRecord.getTranslation().isMarked())
+                    remove(historyRecord);
+                else {
+                    notifyItemChanged(position);
+                }
+            }
+        });
+
+        return holder;
     }
 }

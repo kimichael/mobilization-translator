@@ -10,6 +10,14 @@ import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.LanguageDirection;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,11 +33,25 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
     private Language mSrcLanguage, mDestLanguage;
     private LanguageDirection mLanguageDirection;
     private Translation mCachedTranslation;
+    private Map<String, Language> mLanguagesMap;
+    private List<LanguageDirection> mLanguageDirections;
 
     public TranslatePresenter(TranslationRepository repository) {
         this.mTranslationRepository = checkNotNull(repository);
-        this.mTranslationRepository.retrieveLanguages();
-        this.mTranslationRepository.retrieveLanguageDirections();
+        this.mTranslationRepository.retrieveLanguages()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(languages -> {
+                    mLanguagesMap = new HashMap<>();
+                    for (Language language : languages)
+                        mLanguagesMap.put(language.getLanguageCode(), language);
+                });
+        this.mTranslationRepository.retrieveLanguageDirections()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(languageDirections -> {
+                    mLanguageDirections = languageDirections;
+                });
     }
 
     public void onAttachView(TranslateContract.View view,
@@ -71,10 +93,17 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                 return;
             }
             Timber.d("Start loading");
-            mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection,
-                    new TranslationRepository.LoadTranslationCallback() {
+            mTranslationRepository.getTranslation(mTranslateView.getRequestedText(), mLanguageDirection)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<Translation>() {
                         @Override
-                        public void onTranslationLoaded(Translation translation) {
+                        public void onSubscribe(Disposable d) {
+                            Timber.d("Subscribed on getting translation");
+                        }
+
+                        @Override
+                        public void onSuccess(Translation translation) {
                             mCachedTranslation = translation;
                             if (isAttached()) {
                                 mTranslateView.setProgressSpinner(false);
@@ -83,7 +112,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                         }
 
                         @Override
-                        public void onLoadError() {
+                        public void onError(Throwable e) {
                             Timber.d("Error loading");
                             if (isAttached()) {
                                 mTranslateView.setProgressSpinner(false);
@@ -92,6 +121,14 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
                         }
                     });
         }
+    }
+
+    @Override
+    public void showHistoryRecord(HistoryRecord historyRecord) {
+        setSrcLanguage(mLanguagesMap.get(historyRecord.getLanguageDirection().getSrcLangCode()));
+        setDestLanguage(mLanguagesMap.get(historyRecord.getLanguageDirection().getDestLangCode()));
+        mTranslateView.setInput(historyRecord.getTranslation().getSrcWord());
+        startLoadingTranslation();
     }
 
     @Override
