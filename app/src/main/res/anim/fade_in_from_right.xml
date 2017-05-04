@@ -3,9 +3,13 @@
     android:duration="@integer/small_animation_time">
 
     <alpha
-        android:fromAlpha="1.0"
+        android:fromAlpha="0.0"
         android:startOffset="0"
-        android:toAlpha="0.0" >
+        android:toAlpha="1.0" >
     </alpha>
+
+    <translate
+        android:fromXDelta="@integer/small_right_offset"
+        android:toXDelta="0" />
 
 </set>

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="small_animation_time">150</integer>
+    <integer name="small_animation_time">100</integer>
+    <integer name="small_left_offset">-200</integer>
+    <integer name="small_right_offset">200</integer>
+
 </resources>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="?android:listPreferredItemHeight">
+    android:layout_height="?android:listPreferredItemHeightSmall">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="?android:listPreferredItemHeight"
+        android:layout_height="match_parent"
         android:id="@+id/language_name"
         android:layout_gravity="center"
         android:gravity="center_vertical"
@@ -13,6 +13,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:textSize="16sp"
         android:fontFamily="sans-serif"/>
 
 </LinearLayout>

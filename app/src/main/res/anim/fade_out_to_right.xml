@@ -8,4 +8,8 @@
         android:toAlpha="0.0" >
     </alpha>
 
+    <translate
+        android:fromXDelta="0"
+        android:toXDelta="@integer/small_right_offset"/>
+
 </set>

@@ -62,6 +62,7 @@ import static android.view.View.VISIBLE;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * View in the MVP pattern
  */
 public class TranslateFragment extends Fragment implements TranslateContract.View {
 

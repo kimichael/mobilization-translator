@@ -65,16 +65,25 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar  = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (savedInstanceState != null)
-            resetFragmentState(savedInstanceState.getInt(getString(R.string.key_chosen_fragment), FRAGMENT_STATUS_TRANSLATE));
+            setFragment(savedInstanceState.getInt(getString(R.string.key_chosen_fragment), FRAGMENT_STATUS_TRANSLATE));
         else
-            resetFragmentState(FRAGMENT_STATUS_TRANSLATE);
+            setFragment(FRAGMENT_STATUS_TRANSLATE);
     }
 
-    // Navigate to translate fragment
-    private void resetFragmentState(@ChosenFragmentStatus int chosenFragment) {
+    // Navigate to fragment
+    private void setFragment(@ChosenFragmentStatus int chosenFragment) {
+        checkNotNull(getSupportActionBar()).setDisplayShowCustomEnabled(false);
         // Initialize activity with translate fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+
+        if (mSelectedFragment > chosenFragment) {
+            transaction.setCustomAnimations(R.anim.fade_in_from_left, R.anim.fade_out_to_right);
+        } else if (mSelectedFragment < chosenFragment) {
+            transaction.setCustomAnimations(R.anim.fade_in_from_right, R.anim.fade_out_to_left);
+        } else {
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        }
+
         Fragment fragment;
         switch (chosenFragment) {
             case FRAGMENT_STATUS_BOOKMARKS:
@@ -100,26 +109,17 @@ public class MainActivity extends AppCompatActivity
             case (R.id.action_translate):
                 if (mSelectedFragment == FRAGMENT_STATUS_TRANSLATE)
                     return false;
-                TranslateFragment translateFragment = new TranslateFragment();
-                checkNotNull(getSupportActionBar()).setDisplayShowCustomEnabled(false);
-                transaction.replace(R.id.container, translateFragment);
-                mSelectedFragment = FRAGMENT_STATUS_TRANSLATE;
+                setFragment(FRAGMENT_STATUS_TRANSLATE);
                 break;
             case (R.id.action_bookmarks):
                 if (mSelectedFragment == FRAGMENT_STATUS_BOOKMARKS)
                     return false;
-                StorageFragment storageFragment = new StorageFragment();
-                checkNotNull(getSupportActionBar()).setDisplayShowCustomEnabled(false);
-                transaction.replace(R.id.container, storageFragment);
-                mSelectedFragment = FRAGMENT_STATUS_BOOKMARKS;
+                setFragment(FRAGMENT_STATUS_BOOKMARKS);
                 break;
             case (R.id.action_settings):
                 if (mSelectedFragment == FRAGMENT_STATUS_SETTINGS)
                     return false;
-                SettingsFragment settingsFragment = new SettingsFragment();
-                checkNotNull(getSupportActionBar()).setDisplayShowCustomEnabled(false);
-                transaction.replace(R.id.container, settingsFragment);
-                mSelectedFragment = FRAGMENT_STATUS_SETTINGS;
+                setFragment(FRAGMENT_STATUS_SETTINGS);
                 break;
             default:
                 return false;
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (mSelectedFragment == FRAGMENT_STATUS_SETTINGS ||
                 mSelectedFragment == FRAGMENT_STATUS_BOOKMARKS) {
-            resetFragmentState(FRAGMENT_STATUS_TRANSLATE);
+            setFragment(FRAGMENT_STATUS_TRANSLATE);
         } else {
             super.onBackPressed();
         }

@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Kim Michael on 31.03.17.
+ * Presenter in the MVP
  */
 public class TranslatePresenter implements TranslateContract.UserActionsListener {
 

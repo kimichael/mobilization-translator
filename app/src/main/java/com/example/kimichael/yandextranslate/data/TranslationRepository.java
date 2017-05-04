@@ -14,6 +14,7 @@ import io.reactivex.Single;
 /**
  * Created by Kim Michael on 31.03.17.
  * Repository, which works with network and internal memory to deliver translations to us.
+ * Represents model
  */
 public interface TranslationRepository {
     /**
