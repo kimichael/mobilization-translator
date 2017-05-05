@@ -86,6 +86,10 @@ public interface TranslateContract {
          * */
         void setDestLanguage(Language language);
         /**
+         * Set both source and destination language
+         */
+        void setLanguages(Language srcLanguage, Language destLanguage);
+        /**
          * Tie view to the presenter
          * @param view view to be tied
          * @param srcLanguage initial source language to be set to the presenter

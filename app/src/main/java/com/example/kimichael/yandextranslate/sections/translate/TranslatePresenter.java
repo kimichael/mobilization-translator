@@ -126,8 +126,9 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
 
     @Override
     public void showHistoryRecord(HistoryRecord historyRecord) {
-        setSrcLanguage(mLanguagesMap.get(historyRecord.getLanguageDirection().getSrcLangCode()));
-        setDestLanguage(mLanguagesMap.get(historyRecord.getLanguageDirection().getDestLangCode()));
+        setLanguages(
+                mLanguagesMap.get(historyRecord.getLanguageDirection().getSrcLangCode()),
+                mLanguagesMap.get(historyRecord.getLanguageDirection().getDestLangCode()));
         mTranslateView.setInput(historyRecord.getTranslation().getSrcWord());
         startLoadingTranslation();
     }
@@ -167,6 +168,13 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         }
         mDestLanguage = language;
         mLanguageDirection.setDestLangCode(language.getLanguageCode());
+        updateViewLanguages();
+    }
+
+    @Override
+    public void setLanguages(Language srcLanguage, Language destLanguage) {
+        mSrcLanguage = srcLanguage;
+        mDestLanguage = destLanguage;
         updateViewLanguages();
     }
 

@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
             case FRAGMENT_STATUS_SETTINGS:
                 fragment = new SettingsFragment();
                 break;
+            case FRAGMENT_STATUS_TRANSLATE:
             default:
                 fragment = new TranslateFragment();
         }
@@ -159,13 +160,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void translate(HistoryRecord historyRecord) {
         mHistoryRecord = historyRecord;
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-        TranslateFragment translateFragment = new TranslateFragment();
-        transaction.replace(R.id.container, translateFragment);
-        transaction.commit();
-        mSelectedFragment = FRAGMENT_STATUS_TRANSLATE;
-        mNavigationView.getMenu().getItem(0).setChecked(true);
+        setFragment(FRAGMENT_STATUS_TRANSLATE);
     }
 
     @Override

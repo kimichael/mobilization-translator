@@ -1,4 +1,4 @@
-package com.example.kimichael.yandextranslate.util;
+package com.example.kimichael.yandextranslate.util.rules;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

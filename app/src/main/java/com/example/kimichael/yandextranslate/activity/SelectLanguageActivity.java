@@ -21,7 +21,7 @@ import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.adapters.LanguageAdapter;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
-import com.example.kimichael.yandextranslate.util.Utility;
+import com.example.kimichael.yandextranslate.util.rules.Utility;
 
 import java.util.ArrayList;
 import java.util.List;

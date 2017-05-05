@@ -39,8 +39,8 @@ import com.example.kimichael.yandextranslate.components.ActivityComponent;
 import com.example.kimichael.yandextranslate.data.objects.HistoryRecord;
 import com.example.kimichael.yandextranslate.data.objects.Language;
 import com.example.kimichael.yandextranslate.data.objects.Translation;
-import com.example.kimichael.yandextranslate.util.EspressoIdlingResource;
-import com.example.kimichael.yandextranslate.util.Utility;
+import com.example.kimichael.yandextranslate.util.rules.EspressoIdlingResource;
+import com.example.kimichael.yandextranslate.util.rules.Utility;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,14 +117,13 @@ public class TranslateFragment extends Fragment implements TranslateContract.Vie
         View rootview = inflater.inflate(R.layout.fragment_translate, container, false);
         // Set chooser for translation direction on toolbar
         View toolbarView = inflater.inflate(R.layout.actionbar_translation_chooser, null);
-        ((AppCompatActivity)getActivity())
-                .getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((AppCompatActivity)getActivity())
-                .getSupportActionBar().setCustomView(toolbarView);
-        ((AppCompatActivity)getActivity())
-                .getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((AppCompatActivity)getActivity())
-                .getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            actionBar.setCustomView(toolbarView);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
         mToolbarViewHolder = new ToolbarViewHolder(toolbarView);
 
         unbinder = ButterKnife.bind(this, rootview);

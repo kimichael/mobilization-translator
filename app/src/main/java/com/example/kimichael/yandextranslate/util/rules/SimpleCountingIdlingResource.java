@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.kimichael.yandextranslate.util;
+package com.example.kimichael.yandextranslate.util.rules;
 
 import android.support.test.espresso.IdlingResource;
 

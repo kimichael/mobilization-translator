@@ -8,7 +8,7 @@ import android.text.Spanned;
 
 import com.example.kimichael.yandextranslate.R;
 import com.example.kimichael.yandextranslate.data.provider.TranslationContract;
-import com.example.kimichael.yandextranslate.util.Utility;
+import com.example.kimichael.yandextranslate.util.rules.Utility;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 

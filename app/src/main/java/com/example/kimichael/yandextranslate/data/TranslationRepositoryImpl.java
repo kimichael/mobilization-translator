@@ -41,12 +41,12 @@ public class TranslationRepositoryImpl implements TranslationRepository {
     public Single<Translation> getTranslation(final String requestedText,
                                           final LanguageDirection languageDirection) {
         pendingWord = requestedText;
-        Single<Translation> translationObs = mLocalTranslationSource
+        return mLocalTranslationSource
                 .isDictSupported(languageDirection)
                 .flatMap(new Function<Boolean, SingleSource<Translation>>() {
             @Override
-            public SingleSource<Translation> apply(Boolean aBoolean) throws Exception {
-                @NetworkTranslationSource.TranslationApi int api = aBoolean ?
+            public SingleSource<Translation> apply(Boolean isDictAvailable) throws Exception {
+                @NetworkTranslationSource.TranslationApi int api = isDictAvailable ?
                         NetworkTranslationSource.YANDEX_DICTIONARY_API :
                         NetworkTranslationSource.YANDEX_TRANSLATE_API;
                 // First try looking in database
@@ -70,7 +70,6 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         });
             }
         });
-        return translationObs;
     }
 
     @Override
