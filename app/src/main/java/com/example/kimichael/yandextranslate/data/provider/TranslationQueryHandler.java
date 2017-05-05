@@ -178,7 +178,7 @@ public class TranslationQueryHandler extends AsyncQueryHandler {
 
     public void startLanguagesQuery() {
         startQuery(LANGUAGES_TOKEN, null, TranslationContract.LanguageEntry.CONTENT_URI,
-                languagesProjection, null, null, TranslationContract.LanguageEntry.COLUMN_LANGUAGE_NAME + "DESC");
+                languagesProjection, null, null, TranslationContract.LanguageEntry.COLUMN_LANGUAGE_NAME + " DESC");
     }
 
     public void startLanguageDirectionsQuery() {

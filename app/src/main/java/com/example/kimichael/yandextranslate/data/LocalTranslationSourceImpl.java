@@ -167,7 +167,7 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 TranslationQueryHandler.AsyncQueryListener listener = (token, cookie, cursor) -> {
                     List<Language> languages = new ArrayList<>();
                     if (cursor == null || cursor.getCount() == 0) {
-                        e.onSuccess(languages);
+                        e.onError(new Throwable("Cannot retrieve languages from db"));
                     } else {
                         while (cursor.moveToNext()) {
                             languages.add(Language.from(cursor));

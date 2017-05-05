@@ -42,10 +42,23 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
         this.mTranslationRepository.retrieveLanguages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(languages -> {
-                    mLanguagesMap = new HashMap<>();
-                    for (Language language : languages)
-                        mLanguagesMap.put(language.getLanguageCode(), language);
+                .subscribe(new SingleObserver<List<Language>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Timber.d("Subscribed on getting languages map");
+                    }
+
+                    @Override
+                    public void onSuccess(List<Language> languages) {
+                        mLanguagesMap = new HashMap<>();
+                        for (Language language : languages)
+                            mLanguagesMap.put(language.getLanguageCode(), language);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
                 });
         this.mTranslationRepository.retrieveLanguageDirections()
                 .subscribeOn(Schedulers.io())
