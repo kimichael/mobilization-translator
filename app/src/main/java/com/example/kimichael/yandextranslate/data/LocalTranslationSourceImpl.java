@@ -177,6 +177,7 @@ public class LocalTranslationSourceImpl implements LocalTranslationSource {
                 };
                 mQueryHandler.setLanguagesListener(listener);
                 mQueryHandler.startLanguagesQuery();
+                Timber.d("Query for retrieving languages started");
             }
         });
     }

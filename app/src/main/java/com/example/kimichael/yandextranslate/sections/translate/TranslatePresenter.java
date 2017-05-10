@@ -50,6 +50,7 @@ public class TranslatePresenter implements TranslateContract.UserActionsListener
 
                     @Override
                     public void onSuccess(List<Language> languages) {
+                        Timber.d("Languages map is retrieved");
                         mLanguagesMap = new HashMap<>();
                         for (Language language : languages)
                             mLanguagesMap.put(language.getLanguageCode(), language);

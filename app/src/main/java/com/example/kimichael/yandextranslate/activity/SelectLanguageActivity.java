@@ -138,8 +138,7 @@ public class SelectLanguageActivity extends AppCompatActivity implements LoaderM
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
+    public void onLoaderReset(Loader<Cursor> loader) {}
 
     private void updateEmptyView() {
         if (mLanguageAdapter.getItemCount() == 0) {

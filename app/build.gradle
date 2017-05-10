@@ -71,7 +71,7 @@ dependencies {
     compile "com.google.guava:guava:$rootProject.ext.guavaVersion"
     // JUnit
     testCompile "junit:junit:$rootProject.ext.junitVersion"
-    // For Retrolamba support
+    // For Retrolambda support
     provided 'javax.annotation:jsr250-api:1.0'
 
     // Library that mocks injected objects DaggerMock

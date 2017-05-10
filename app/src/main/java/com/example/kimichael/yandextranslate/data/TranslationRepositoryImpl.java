@@ -87,6 +87,7 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                 }
                 @Override
                 public void onSuccess(List<Language> languages) {
+                    Timber.d("Languages are retrieved and being saved");
                     mLocalTranslationSource.saveLanguages(languages);
                 }
                 @Override
